@@ -138,10 +138,6 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
         let alert = { show: true };
         setShowSpinner(true);
 
-        // console.log(checkedClassDays);
-        // console.log(classTimesInMinutes);
-        // console.log(classDurationsInMinutes);
-
         try {
             validateForm({
                 studentId: studentId,

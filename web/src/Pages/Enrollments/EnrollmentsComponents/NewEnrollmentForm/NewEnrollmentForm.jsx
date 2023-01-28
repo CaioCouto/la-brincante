@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap';
 import { BsCheck, BsX } from 'react-icons/bs';
 
 import validateForm from './formValidation';    
-import { Alert, Button, Spinner } from '../../../../Components';
+import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
 import { Enrollments, Courses, Students } from '../../../../Models';
 import { classDaysCheckBoxes, getCheckedDays, hoursToMinutes } from '../../../../utils';
 
@@ -20,19 +20,19 @@ function FormSelect({ defaultOptionText, data, onChangeFn }) {
     )
 }
 
-function TimeInput({ label, value, onChangeFn }) {
-    return (
-        <div className="col-12 col-md-6 mb-3">
-            <Form.Label>{ label }</Form.Label>
-            <Form.Control 
-                type="time"
-                onChange={ onChangeFn }
-                value={ value }
-                required
-            />
-        </div>
-    )
-}
+// function TimeInput({ label, value, onChangeFn }) {
+//     return (
+//         <div className="col-12 col-md-6 mb-3">
+//             <Form.Label>{ label }</Form.Label>
+//             <Form.Control 
+//                 type="time"
+//                 onChange={ onChangeFn }
+//                 value={ value }
+//                 required
+//             />
+//         </div>
+//     )
+// }
 
 export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
     const [ showSpinner, setShowSpinner ] = useState(false);
@@ -217,7 +217,7 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
             <Form.Group as="section"  className='row mb-3'>
                 {
                     Array(numberOfclassTimeAndDurationInputs).fill(0).map((n, index) => (        
-                        <div key={ index }>
+                        <div key={ index } className='d-flex flex-column flex-sm-row justify-content-between gap-1 mb-3'>
                             <TimeInput
                                 label={ `Horário${numberOfclassTimeAndDurationInputs > 1 ? ' '+(index+1) : ''}` }
                                 onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}

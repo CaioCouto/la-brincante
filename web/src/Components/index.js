@@ -6,6 +6,7 @@ import Table from "./Table";
 import Spinner from "./Spinner";
 import Card from "./Card";
 import Divider from "./Divider";
+import TimeInput from "./TimeInput";
 
 export {
     Card,
@@ -16,4 +17,5 @@ export {
     Navbar,
     Spinner,
     Divider,
+    TimeInput
 };

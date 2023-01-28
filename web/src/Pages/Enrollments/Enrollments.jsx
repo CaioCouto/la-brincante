@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BsPlus } from 'react-icons/bs';
 import { Form, Table as BsTable } from 'react-bootstrap';
 
-import styles from './enrollments.module.css';
-import { weekdays } from '../../utils';
+import { weekdays, minutesToHours } from '../../utils';
 import { Alert, Button, Divider, Modal } from '../../Components';
 import { NewEnrollmentForm } from './EnrollmentsComponents';
 import { Enrollments as EnrollmentsModel} from '../../Models';
@@ -103,7 +102,8 @@ export default function Enrollments() {
 }
 
 function EnrollmentsTable({ data }) {
-    const getDaysStr = (classDay) => classDay.split(',').map(day => weekdays[parseInt(day)]).join(', ')
+    const getDaysStr = (classDay) => classDay.split(',').map(day => weekdays[parseInt(day)]).join(', ');
+    const getclassTimeStr = (classTimes) => classTimes.split(',').map(time => minutesToHours(parseInt(time))).join(', ');
     return (
         data.length === 0 ?
         <h3>Não há registros cadastrados ainda.</h3> :
@@ -126,7 +126,7 @@ function EnrollmentsTable({ data }) {
                             <td className='text-capitalize text-center align-middle'>{ datum.students.name }</td>
                             <td className='text-capitalize text-center align-middle'>{ datum.course.name }</td>
                             <td className='d-none d-md-table-cell text-capitalize text-center align-middle'>{ getDaysStr(datum.classDays) }</td>
-                            <td className='d-none d-md-table-cell text-capitalize text-center align-middle'>{ datum.classTime }</td>
+                            <td className='d-none d-md-table-cell text-capitalize text-center align-middle'>{ getclassTimeStr(datum.classTime) }</td>
                             <td className='d-flex justify-content-center align-items-center'>
                                 <Button
                                     label='Ver detalhes'

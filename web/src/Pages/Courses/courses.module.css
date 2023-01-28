@@ -1,0 +1,4 @@
+.dangerBtn,
+.dangerBtn:hover {
+    background: var(--danger-button-bgcolor);
+}

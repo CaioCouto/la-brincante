@@ -1,0 +1,23 @@
+.navbar {
+    background: var(--puple);
+    border-radius: var(--main-border-radius) !important;
+}
+
+.navbarBrand {
+    font-size: 1.5rem !important;
+}
+
+.navbarText {
+    color: #fff !important;
+}
+
+.navbarText:hover {
+    border-bottom: 2px solid #419cdc !important;
+    padding: 5px;
+}
+
+.navbarDropdownButton,
+.navbarDropdownButton:focus {
+    border: 0 !important;
+    box-shadow: none !important;
+}

@@ -1,0 +1,28 @@
+.successBtn {
+    background: var(--success-button-bgcolor);
+    border: 0;
+}
+
+.successBtn:hover {
+    background: var(--success-button-bgcolor-hover);
+    border: 0;
+}
+
+.dangerBtn {
+    background: var(--danger-button-bgcolor);
+    border: 0;
+}
+
+.dangerBtn:hover {
+    background: var(--danger-button-bgcolor-hover);
+    border: 0;
+}
+.infoBtn {
+    background: var(--info-button-bgcolor);
+    border: 0;
+}
+
+.infoBtn:hover {
+    background: var(--info-button-bgcolor-hover);
+    border: 0;
+}

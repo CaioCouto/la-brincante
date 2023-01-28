@@ -1,0 +1,11 @@
+.disabled {
+    color: #807979 !important; 
+}
+
+.dangerBtn {
+    background: var(--danger-button-bgcolor) !important; 
+}
+
+.successBtn {
+    background: var(--success-button-bgcolor) !important; 
+}

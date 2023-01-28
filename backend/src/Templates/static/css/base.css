@@ -1,0 +1,19 @@
+body {
+    min-height: 100vh;
+}
+
+header .nav-link:hover,
+header .nav-link:focus {
+    border-bottom: solid .1rem red;
+    border-radius: 10px;
+    padding: .2rem;
+}
+
+main {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+td {
+    text-transform: capitalize;
+}

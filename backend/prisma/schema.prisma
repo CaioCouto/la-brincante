@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+	provider = "prisma-client-js"
+	previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+	provider = "mysql"
+  	url      = env("DATABASE_URL")
+}
+
+model Students {
+	id			Int @id @default(autoincrement())
+	name		String
+	
+	enrollments Enrollments[]
+}
+
+model Courses {
+	id			Int @id @default(autoincrement())
+	name		String @unique
+	value		Float
+	
+	enrollments Enrollments[]
+}
+
+model Enrollments {
+	id			Int @id @default(autoincrement())
+	courseId	Int
+	studentId	Int
+	classDays	String
+	classTime	String
+	billingDay  String
+	discount	Int
+	isOnline	Boolean @default(false)
+	duration	String
+	
+	course 		Courses @relation(fields: [courseId], references: [id], onDelete: Cascade)
+	students 	Students @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+	@@fulltext([classDays])
+}

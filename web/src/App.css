@@ -1,0 +1,31 @@
+:root {
+  --dark-color: #4B4237;
+  --puple: #AC2072;
+  --main-border-radius: 20px;
+  --success-button-bgcolor: #6EA61E;
+  --danger-button-bgcolor: #FF101F;
+  --info-button-bgcolor: #1E6EA6;
+  --success-button-bgcolor-hover: #88cf26;
+  --danger-button-bgcolor-hover: #ff4754;
+  --info-button-bgcolor-hover: #2688cf;
+}
+
+.App {
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: var(--puple);
+}
+
+#main {
+  box-sizing: border-box;
+  border-radius: var(--main-border-radius);
+  padding: 1rem;
+}
+
+#main > * {
+  margin-bottom: 1rem;
+}

@@ -1,4 +1,4 @@
 export default [
-    'segunda', 'terça', 'quarta',
+    'domingo', 'segunda', 'terça', 'quarta',
     'quinta', 'sexta', 'sábado'
 ];

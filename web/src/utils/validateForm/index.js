@@ -84,7 +84,7 @@ function validateBillingDay(billingDay) {
      * Since there are negative days nor a
      * "day 0" (this is not a pandemic).  
      */
-    if(parseInt(billingDay) <= 0) throw new FormInputError('Selecione um dia válido para cobrança.');
+    if(!billingDay || parseInt(billingDay) <= 0) throw new FormInputError('Selecione um dia válido para cobrança.');
 }
 
 export default function validateForm(data) {

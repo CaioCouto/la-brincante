@@ -1,12 +1,18 @@
+/** 
+ * @param {Object} data -- objeto contendo os dados da matrícula.
+ * @param {Boolean} update -- boolean que controla o formulário e seus componentes.
+ * @param {Function} setUpdate -- atualizado o estado de update.
+ */
+
 import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { BsCheck, BsX } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './EnrollmentDetailsForm.module.css';
-import { Enrollments, Errors } from '../../../../Models';
-import { Alert, Button, Spinner } from '../../../../Components';
-import { hoursToMinutes, minutesToHours, classDaysCheckBoxes, getCheckedDays, closeAlertTimeout } from '../../../../utils';
+import { Enrollments } from '../../../../Models';
+import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
+import { hoursToMinutes, minutesToHours, classDaysCheckBoxes, getCheckedDays, closeAlertTimeout, validateForm, weekdays } from '../../../../utils';
 
 function setInitialClassDays(dataClassDays) {
     const classDaysArray = dataClassDays.split(',').map(day => parseInt(day));
@@ -33,33 +39,34 @@ function getNextBillingDate(billingDay) {
     return `${formatStr(today.getDate())}/${formatStr(today.getMonth()+1)}/${today.getFullYear()}`;
 }
 
-const { FormInputError } = Errors;
+function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
+    return (
+        <Form.Select
+            className={`${disabled ? styles['disabled'] : null}`} 
+            onChange={ onChangeFn } 
+            value={ value } 
+            disabled={ disabled }>
+            <option value="-1">{ defaultOptionText }</option>
+            {
+                data.map(datum => (
+                    <option key={ datum.id } value={ datum.id }>{ datum.name }</option>
+                ))
+            }
+        </Form.Select>
+    )
+}
 
 export default function NewEnrollmentForm({ data, update, setUpdate }) {
+    const minutesStrIntoHoursArray = (timeStr) => timeStr.split(',').map(time => minutesToHours(parseInt(time)));
     const navigate = useNavigate();
     const [ showSpinner, setShowSpinner ] = useState(false);
     const [ formAlert, setFormAlert ] = useState({ show: false });
-    const [ classTime, setClassTime ] = useState(data.classTime.split(','));
-    const [ classDuration, setClassDuration ] = useState(data.duration.split(','));
+    const [ classTime, setClassTime ] = useState(minutesStrIntoHoursArray(data.classTime));
+    const [ classDuration, setClassDuration ] = useState(minutesStrIntoHoursArray(data.duration));
     const [ classDays, setClassDays ] = useState(setInitialClassDays(data.classDays));
     const [ isOnline, setIsOnline ] = useState(Number(data.isOnline));
     const [ billingDay, setBillingDay ] = useState(data.billingDay);
     const [ discount, setDiscount ] = useState(data.discount);
-
-    async function deleteEnrollment() {
-        const alert = { show: true };
-        setShowSpinner(true);
-        try {
-            await Enrollments.delete(data.id);
-            navigate('/matriculas', { replace: true, state: { deleted: true } });            
-        } catch (error) {
-            alert.variant = error.response.status === 404 ? 'warning' : 'danger';
-            alert.message = error.response.status === 404 ? 'Matrícula não existe.' : 'Um erro ocorreu.';
-        }
-        finally {
-            setShowSpinner(false);
-        }
-    }
 
     function handleClassDayCheck(e) {
         /**
@@ -76,25 +83,77 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
         setClassDays(tmp);
     }
 
-    function validateForm() {
+    function handleClassTimeChange(time, index, remove=false) {
+        const tmp = classTime.map(t => t)
+        if (remove) { tmp.pop() } 
+        else { tmp[index] = time }
+        
+        setClassTime(tmp)
+    }
+    
+    function handleClassDurationChange(time, index, remove=false) {
+        const tmp = classDuration.map(t => t)
+        if (remove) { tmp.pop() } 
+        else { tmp[index] = time }
+        setClassDuration(tmp)
+    }
+
+    function addClasstimeAndDurationInputs() {
         /**
-         * Validates all fields in the form. If any of the 
-         * following is not valid, a self-defined exception is thown.
-         * 
-         *  - *studentId nor CourseId* should be less or equal 0;
-         *  - *classTime* must not be an empty string nor be sooner than 08hr nor greater than 20hr (a.k.a 8pm).
-         *  - *classDuration* must not be an empty string.
-         *  - *isOnline* must be 1 (in person) or 0 (online).
-         *  - *number_of_checked_days* must not be 0.
-         *  - *billingDay* must not be before the today's date.
+         * Aumenta a quantidade de vezes que os
+         * inputs de classTime e duration serão
+         * repetidos. Insere uma nova string vazia 
+         * na última posição de ambos os arrays.
+         * Ambos os arrays sempre possuirão o mesmo
+         * tamanho.
          */
-        const number_of_checked_days = getCheckedDays(classDays).length;
-        if(!classTime || classTime < '08:00' || classTime > '20:00') throw new FormInputError('Escolha um horário válido para a aula acontecer. De 08hr às 20hr.');
-        else if(!classDuration || classDuration === '00:00') throw new FormInputError('A aula não pode acabar instantaneamente. Digite uma duração válida.');
-        else if(isOnline !== 0 && isOnline !== 1) throw new FormInputError('Escolha um ambiente válido.');
-        else if(number_of_checked_days === 0) throw new FormInputError('Selecione ao menos um dia de aula.');
-        else if(discount < 0 || discount > 100) throw new FormInputError('Digite um valor de desconto válido.');
-        else if(parseInt(billingDay) <= 0) throw new FormInputError('Selecione um dia válido para cobrança.');
+        const newIndex = classTime.length;
+        // setNumberOfClassTimeAndDurationInputs(previous => previous+1);
+        handleClassTimeChange('', newIndex);
+        handleClassDurationChange('', newIndex);
+    }
+    
+    function removeClasstimeAndDurationInputs() {
+        /**
+         * Diminui a quantidade de vezes que os
+         * inputs de classTime e duration serão
+         * repetidos. Remove o valor da última
+         * posição de ambos os arrays.
+         * Ambos os arrays sempre possuirão o mesmo
+         * tamanho.
+         */
+        // setNumberOfClassTimeAndDurationInputs(previous => previous-1);
+        handleClassTimeChange('', '', true);
+        handleClassDurationChange('', '', true);
+    }
+
+    function cancelUpdate() {
+        /**
+         * Reinicia todos os estados para
+         * os seus valores iniciais.
+         */
+        setClassTime(minutesStrIntoHoursArray(data.classTime));
+        setClassDuration(minutesStrIntoHoursArray(data.duration));
+        setClassDays(setInitialClassDays(data.classDays));
+        setIsOnline(Number(data.isOnline));
+        setBillingDay(data.billingDay);
+        setDiscount(data.discount);
+        setUpdate(false);
+    }
+
+    async function deleteEnrollment() {
+        const alert = { show: true };
+        setShowSpinner(true);
+        try {
+            await Enrollments.delete(data.id);
+            navigate('/matriculas', { replace: true, state: { deleted: true } });            
+        } catch (error) {
+            alert.variant = error.response.status === 404 ? 'warning' : 'danger';
+            alert.message = error.response.status === 404 ? 'Matrícula não existe.' : 'Um erro ocorreu.';
+        }
+        finally {
+            setShowSpinner(false);
+        }
     }
 
     async function submit () {
@@ -104,21 +163,34 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
          * and (potential) failures.
          */
         let alert = { show: true };
+        const checkedClassDays = getCheckedDays(classDays);
+        const classTimesInMinutes = classTime.map(time => hoursToMinutes(time.split(':')));
+        const classDurationsInMinutes = classDuration.map(time => hoursToMinutes(time.split(':')));
         setShowSpinner(true);
+
         try {
-            validateForm();
+            validateForm(({
+                studentId: data.studentId,
+                courseId: data.courseId,
+                classDays: checkedClassDays,
+                classTimes: classTimesInMinutes,
+                billingDay: billingDay,
+                discount: discount,
+                isOnline: isOnline,
+                duration: classDurationsInMinutes
+            }));
             if(!showSpinner) {
                 await Enrollments.update(
                     data.id,
                     {
-                    studentId: data.studentId,
-                    courseId: data.courseId,
-                    classDays: getCheckedDays(classDays),
-                    classTime: classTime,
-                    billingDay: billingDay,
-                    discount: discount || 0,
-                    isOnline: isOnline,
-                    duration: hoursToMinutes(classDuration.split(':'))
+                        studentId: data.studentId,
+                        courseId: data.courseId,
+                        classDays: checkedClassDays.join(','),
+                        classTime: classTimesInMinutes.join(','),
+                        billingDay: billingDay,
+                        discount: discount,
+                        isOnline: isOnline,
+                        duration: classDurationsInMinutes.join(',')
                     }
                 );
                 alert.variant = 'success';
@@ -126,8 +198,10 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 setUpdate(false);
             }            
         } catch (error) {
+            console.log(error);
             alert.variant = 'danger';
-            alert.message = 'Um erro ocorreu durante a operação.';
+            if(error.response){ alert.message = 'Um erro ocorreu durante a operação.'; }
+            else { alert.message = error.message; }
         }
         finally {
             setFormAlert(alert);
@@ -162,32 +236,54 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 </div>
             </Form.Group>
             
-            <Form.Group as="section"  className='row mb-3'>
-                <div className="col-12 col-md-4 mb-3">
-                    <Form.Label>Horário</Form.Label>
-                    <Form.Control 
-                        className={`${!update ? styles['disabled'] : null}`}
-                        type="time"
-                        onChange={(e) => setClassTime(e.target.value)}
-                        value={ classTime }
-                        required
-                        disabled={ !update }
-                    />
-                </div>
-                
-                <div className="col-12 col-md-4 mb-3">
-                    <Form.Label>Duração</Form.Label>
-                    <Form.Control
-                        className={`${!update ? styles['disabled'] : null}`}
-                        type="time" 
-                        onChange={(e) => setClassDuration(e.target.value)}
-                        value={ classDuration }
-                        required
-                        disabled={ !update }
-                    />
-                </div>
+            <Form.Group as="section"  className='row'>
+                {
+                    Array(classTime.length).fill(0).map((n, index) => {
+                        const str = `(${weekdays[parseInt(data.classDays.split(',')[index])]})`
+                        return (
+                            <div key={ index } className='d-flex flex-column flex-sm-row justify-content-between gap-1 mb-3'>
+                                <TimeInput
+                                    label={ `Horário${classTime.length > 1 ? ' '+(str) : ''}` }
+                                    className={`${!update ? styles['disabled'] : null}`}
+                                    value={ classTime[index] || '' }
+                                    onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}
+                                    disabled={ !update }
+                                />
+                                <TimeInput
+                                    label={ `Duração${classTime.length > 1 ? ' '+(str) : ''}` }
+                                    className={`${!update ? styles['disabled'] : null}`}
+                                    value={ classDuration[index] || '' }
+                                    onChangeFn={(e) => handleClassDurationChange(e.target.value, index)}
+                                    disabled={ !update }
+                                />
+                            </div>
+                        )
+                    })
+                }
 
-                <div className="col-12 col-md-4">
+                {
+                    !update ?
+                    null :
+                    <div className='d-flex justify-content-between'>
+                        <Button
+                            label="Adicionar horário"
+                            onClickFn={ () => addClasstimeAndDurationInputs() }
+                        />
+                        {
+                            classTime.length > 1 ?
+                            <Button
+                                label="Remover horário"
+                                variant='danger'
+                                onClickFn={ () => removeClasstimeAndDurationInputs()}
+                            />
+                            : null
+                        }
+                    </div>
+                }
+            </Form.Group>
+
+            <Form.Group as="section"  className='row mb-3'>
+                <div className="col-12">
                     <Form.Label>Ambiente</Form.Label>
                     <FormSelect
                         disabled={ !update }
@@ -295,26 +391,9 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                     variant="danger"
                     label={!update ? 'Excluir' : 'Cancelar'}
                     Icon={ !update ? null : <BsX size={ 23 }/> }
-                    onClickFn={ () => update ? setUpdate(false) : deleteEnrollment() }
+                    onClickFn={ () => update ? cancelUpdate() : deleteEnrollment() }
                 />
             </Form.Group>
         </Form>
     );
-}
-
-function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
-    return (
-        <Form.Select
-            className={`${disabled ? styles['disabled'] : null}`} 
-            onChange={ onChangeFn } 
-            value={ value } 
-            disabled={ disabled }>
-            <option value="-1">{ defaultOptionText }</option>
-            {
-                data.map(datum => (
-                    <option key={ datum.id } value={ datum.id }>{ datum.name }</option>
-                ))
-            }
-        </Form.Select>
-    )
 }

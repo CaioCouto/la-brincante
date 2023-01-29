@@ -18,8 +18,6 @@ export default function EnrollmentDetails() {
 
     useEffect(() => { getEnrollment(); }, [ update ]);
 
-    console.log(enrollment);
-
     return (
         <>
             <h1>RA { `${enrollment.id}`.padStart(7, '0') }</h1>

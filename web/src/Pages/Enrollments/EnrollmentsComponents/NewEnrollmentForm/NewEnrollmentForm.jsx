@@ -32,7 +32,6 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
     const [ isOnline, setIsOnline ] = useState(-1);
     const [ billingDay, setBillingDay ] = useState('');
     const [ discount, setDiscount ] = useState(0);
-    const [ numberOfclassTimeAndDurationInputs, setNumberOfClassTimeAndDurationInputs] = useState(1);
 
     async function loadAllStudents() {
         /**
@@ -77,7 +76,7 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
          * tamanho.
          */
         const newIndex = classTimes.length;
-        setNumberOfClassTimeAndDurationInputs(previous => previous+1);
+        // setNumberOfClassTimeAndDurationInputs(previous => previous+1);
         handleClassTimeChange('', newIndex);
         handleClassDurationChange('', newIndex);
     }
@@ -91,7 +90,7 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
          * Ambos os arrays sempre possuirão o mesmo
          * tamanho.
          */
-        setNumberOfClassTimeAndDurationInputs(previous => previous-1);
+        // setNumberOfClassTimeAndDurationInputs(previous => previous-1);
         handleClassTimeChange('', '', true);
         handleClassDurationChange('', '', true);
     }
@@ -201,15 +200,15 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
             
             <Form.Group as="section"  className='row mb-3'>
                 {
-                    Array(numberOfclassTimeAndDurationInputs).fill(0).map((n, index) => (        
+                    classTimes.map((n, index) => (        
                         <div key={ index } className='d-flex flex-column flex-sm-row justify-content-between gap-1 mb-3'>
                             <TimeInput
-                                label={ `Horário${numberOfclassTimeAndDurationInputs > 1 ? ' '+(index+1) : ''}` }
+                                label={ `Horário${classTimes.length > 1 ? ' '+(index+1) : ''}` }
                                 onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}
                                 value={ classTimes[index] || '' }
                             />
                             <TimeInput
-                                label={ `Duração${numberOfclassTimeAndDurationInputs > 1 ? ' '+(index+1) : ''}` }
+                                label={ `Duração${classTimes.length > 1 ? ' '+(index+1) : ''}` }
                                 onChangeFn={(e) => handleClassDurationChange(e.target.value, index)}
                                 value={ classDuration[index] || '' }
                             />
@@ -223,7 +222,7 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
                         onClickFn={ () => addClasstimeAndDurationInputs() }
                     />
                     {
-                        numberOfclassTimeAndDurationInputs > 1 ?
+                        classTimes.length > 1 ?
                         <Button
                             label="Remover horário"
                             variant='danger'

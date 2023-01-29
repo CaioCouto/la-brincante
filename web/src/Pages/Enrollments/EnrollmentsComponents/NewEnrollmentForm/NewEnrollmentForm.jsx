@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { BsCheck, BsX } from 'react-icons/bs';
-
-import validateForm from './formValidation';    
+  
 import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
 import { Enrollments, Courses, Students } from '../../../../Models';
-import { classDaysCheckBoxes, getCheckedDays, hoursToMinutes } from '../../../../utils';
+import { classDaysCheckBoxes, getCheckedDays, hoursToMinutes, validateForm } from '../../../../utils';
 
 function FormSelect({ defaultOptionText, data, onChangeFn }) {
     return (
@@ -19,20 +18,6 @@ function FormSelect({ defaultOptionText, data, onChangeFn }) {
         </Form.Select>
     )
 }
-
-// function TimeInput({ label, value, onChangeFn }) {
-//     return (
-//         <div className="col-12 col-md-6 mb-3">
-//             <Form.Label>{ label }</Form.Label>
-//             <Form.Control 
-//                 type="time"
-//                 onChange={ onChangeFn }
-//                 value={ value }
-//                 required
-//             />
-//         </div>
-//     )
-// }
 
 export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
     const [ showSpinner, setShowSpinner ] = useState(false);

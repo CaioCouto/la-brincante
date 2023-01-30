@@ -1,26 +1,22 @@
 import prisma from "../prisma";
 
 interface ICourses {
-    name: string 
-    value: string
+    name: string
 }
 
 const { courses } = prisma;
 
 export default class Courses {
-    name: string 
-    value: number
+    name: string
 
     constructor(data: ICourses) {
         this.name = data.name.toLowerCase();
-        this.value = parseFloat(data.value);
     }
 
     register() {
         return courses.create({
             data: {
                 name: this.name,
-                value: this.value,
             }
         });
     }
@@ -32,7 +28,6 @@ export default class Courses {
             },
             data: {
                 name: this.name,
-                value: this.value,
             }
         })
     }

@@ -4,8 +4,10 @@ import { BsArrowReturnLeft } from 'react-icons/bs';
 import { Alert, Button } from '../../Components';
 import { Enrollments as EnrollmentsModel} from '../../Models';
 import { EnrollmentDetailsForm } from './EnrollmentDetailsComponents';
+import { useNavigate } from 'react-router-dom';
 
 export default function EnrollmentDetails() {
+    const navigate = useNavigate();
     const [ enrollment, setEnrollment ] = useState({});    
     const [ update, setUpdate ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
@@ -32,7 +34,7 @@ export default function EnrollmentDetails() {
                     label="Voltar"
                     variant="info"
                     Icon={ <BsArrowReturnLeft size={ 23 }/> }
-                    onClickFn={ () => location.pathname = '/matriculas' }
+                    onClickFn={ () => navigate(-1) }
                 />
             </section>
 

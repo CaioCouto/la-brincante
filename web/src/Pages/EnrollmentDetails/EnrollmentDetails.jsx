@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BsArrowReturnLeft } from 'react-icons/bs';
 
-import { Alert, Button } from '../../Components';
+import { Alert, Button, Spinner } from '../../Components';
 import { Enrollments as EnrollmentsModel} from '../../Models';
 import { EnrollmentDetailsForm } from './EnrollmentDetailsComponents';
 import { useNavigate } from 'react-router-dom';
@@ -22,30 +22,29 @@ export default function EnrollmentDetails() {
 
     return (
         <>
-            <h1>RA { `${enrollment.id}`.padStart(7, '0') }</h1>
+            <Button
+                label="Voltar"
+                variant="info"
+                Icon={ <BsArrowReturnLeft size={ 23 }/> }
+                onClickFn={ () => navigate(-1) }
+            />
 
             <Alert
                 alert={ alert }
                 setAlert={ setAlert }
             />
-            
-            <section className='d-flex justify-content-between'>
-                <Button
-                    label="Voltar"
-                    variant="info"
-                    Icon={ <BsArrowReturnLeft size={ 23 }/> }
-                    onClickFn={ () => navigate(-1) }
-                />
-            </section>
 
             {
                 Object.keys(enrollment).length === 0 ?
-                null:
-                <EnrollmentDetailsForm
-                    data={ enrollment }
-                    update={ update }
-                    setUpdate={ setUpdate }
-                />
+                <Spinner show={ true }/> :
+                <>
+                    <h1>RA { `${enrollment.id}`.padStart(7, '0') }</h1>
+                    <EnrollmentDetailsForm
+                        data={ enrollment }
+                        update={ update }
+                        setUpdate={ setUpdate }
+                    />
+                </>
             }
         </>
     );

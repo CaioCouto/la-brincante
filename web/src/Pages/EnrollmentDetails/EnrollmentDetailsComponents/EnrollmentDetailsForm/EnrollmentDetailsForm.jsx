@@ -264,7 +264,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 {
                     !update ?
                     null :
-                    <div className='d-flex justify-content-between'>
+                    <div className='d-flex justify-content-end gap-2'>
                         <Button
                             label="Adicionar horário"
                             onClickFn={ () => addClasstimeAndDurationInputs() }
@@ -326,8 +326,8 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 </div>
 
                 <div className="col-12 col-md-6">
-                    <div className="d-flex justify-content-between gap-2">
-                        <div as="div" className="mb-3">
+                    <div className="d-flex flex-column gap-2">
+                        <div className="">
                             <Form.Label>Desconto (%)</Form.Label>
                             <Form.Control
                                 className={`${!update ? styles['disabled'] : null}`}
@@ -341,40 +341,30 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                             />
                         </div>
 
-                        <div as="div" className="mb-3">
-                            <Form.Label>Valor total(R$)</Form.Label>
-                            <Form.Control
-                                className={ styles['disabled'] }
-                                value={ (data.course.value*(1 - data.discount/100)).toString() }
-                                required
-                                disabled
-                            />
-                        </div>
-                    </div>
-
-                    <div as="section" className="mb-3">
-                        {
-                            update ?
-                            <>
-                                <Form.Label>Dia da fatura</Form.Label>
-                                <FormSelect
-                                    disabled={ false }
-                                    value={ billingDay }
-                                    data={Array.from(Array(31), (_, i) => ({ id: i+1, name: i+1 }))}
-                                    defaultOptionText="Escolha o melhor dia para a cobrança"
-                                    onChangeFn={(e) => setBillingDay(e.target.value)}
+                        <div className="">
+                            {
+                                update ?
+                                <>
+                                    <Form.Label>Dia da fatura</Form.Label>
+                                    <FormSelect
+                                        disabled={ false }
+                                        value={ billingDay }
+                                        data={Array.from(Array(31), (_, i) => ({ id: i+1, name: i+1 }))}
+                                        defaultOptionText="Escolha o melhor dia para a cobrança"
+                                        onChangeFn={(e) => setBillingDay(e.target.value)}
+                                        />
+                                </>
+                                :
+                                <>
+                                    <Form.Label>Data da fatura</Form.Label>
+                                    <Form.Control
+                                        disabled
+                                        className={ styles['disabled'] }
+                                        value={ getNextBillingDate(billingDay) }
                                     />
-                            </>
-                            :
-                            <>
-                                <Form.Label>Data da fatura</Form.Label>
-                                <Form.Control
-                                    disabled
-                                    className={ styles['disabled'] }
-                                    value={ getNextBillingDate(billingDay) }
-                                />
-                            </>
-                        }
+                                </>
+                            }
+                        </div>
                     </div>
                 </div>
             </Form.Group>

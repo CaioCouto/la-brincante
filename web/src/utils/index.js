@@ -4,7 +4,6 @@ import hoursToMinutes from "./hoursToMinutes";
 import minutesToHours from "./minutesToHours";
 import getCheckedDays from "./getCheckedDays";
 import closeAlertTimeout from "./closeAlertTimeout";
-import displayClassTimeSpan from "./displayClassTimeSpan";
 import validateForm from "./validateForm";
 
 export {
@@ -14,6 +13,5 @@ export {
     minutesToHours,
     getCheckedDays,
     closeAlertTimeout,
-    displayClassTimeSpan,
     validateForm,
 };

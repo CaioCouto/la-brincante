@@ -31,6 +31,7 @@ export default class StudentsController {
             let students;
             if (id) students = await Students.listUnique(parseInt(id));
             else students = await Students.list()
+            if (!students) return res.status(404).json(students);            
             return res.json(students);            
         } catch (error: any) {
             console.log(error);

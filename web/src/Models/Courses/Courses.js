@@ -9,12 +9,11 @@ export default class Courses {
         return api.get('/courses');
     }
 
-    static create(name, value) {
+    static create(name) {
         return api.post(
             '/courses/register',
             {
                 name: name,
-                value: value
             }
         );
     }

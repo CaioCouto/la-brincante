@@ -3,7 +3,6 @@ import { Form, Table} from 'react-bootstrap';
 import { BsX, BsPlus } from 'react-icons/bs';
 import { Alert, Button, Divider, Modal, Spinner } from '../../Components';
 
-import styles from './courses.module.css';
 import { Courses as CoursesModel} from '../../Models';
 import { NewCourseForm } from './CoursesComponents';
 import { closeAlertTimeout } from '../../utils';
@@ -127,7 +126,6 @@ function CoursesTable({ data, deleteCourse }) {
                 <tr>
                     <th className='text-center'>Id</th>
                     <th className='text-center'>Curso</th>
-                    <th className='text-center'>Valor</th>
                     <th></th>
                 </tr>
             </thead>
@@ -137,7 +135,6 @@ function CoursesTable({ data, deleteCourse }) {
                         <tr key={ datum.id }>
                             <td className='text-capitalize text-center align-middle'>{ datum.id }</td>
                             <td className='text-capitalize text-center align-middle'>{ datum.name }</td>
-                            <td className='text-capitalize text-center align-middle'>R$ { datum.value }</td>
                             <td className='d-flex flex-column flex-md-row justify-content-center align-items-center gap-2'>
                                 <Button
                                     variant="danger"

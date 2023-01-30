@@ -6,33 +6,18 @@ import { Courses, Errors } from '../../../../Models';
 import { Alert, Button, Spinner } from '../../../../Components';
 import { closeAlertTimeout } from '../../../../utils';
 
-function applyBRLCurrencyMask(value) {
-    let amount = Number(value.replace(/\D/g, '')) ? Number(value.replace(/\D/g, '')) : 0;
-    return (amount/100)
-        .toFixed(2)
-        .toLocaleString('pt-BR', { currency:'BRL', maximumFractionDigits: 2, useGrouping:true })
-        .replace('.', ',');
-}
-
 export default function NewCourseForm({ handleCloseModal, setAlert }) {
+    const [ name, setName ] = useState('');
     const [ showSpinner, setSpinner ] = useState(false);
     const [ formAlert, setFormAlert ] = useState({ show: false });
-    const [ name, setName ] = useState('');
-    const [ value, setValue ] = useState('');
 
     function handleNameChange(inputName) {
-        const name = inputName.replace(/[-_+=§\[\]\{\}\\/?~^´`\d!@#$%¨&*()¹²³£¢¬ªº;:,.<>|°'"]/g, '').replace(/\s{2,}/g, ' ');
-        setName(name)
-    }
-    
-    function handleValueChange(inputValue) {
-        let tmp = applyBRLCurrencyMask(inputValue);
-        setValue(tmp)
+        const name = inputName.replace(/[-_+=§\[\]\{\}\\/?\d!@#$%¨&*()¹²³£¢¬ªº;:,.<>|°'"]/g, '').replace(/\s{2,}/g, ' ');
+        setName(name);
     }
 
     function validateForm() {
         if(name.length <= 3) throw new Errors.FormInputError("Digite um nome válido.");
-        else if(value.length === 0) throw new Errors.FormInputError("Digite um valor válido.");
     }
 
     async function submit () {
@@ -40,7 +25,7 @@ export default function NewCourseForm({ handleCloseModal, setAlert }) {
         setSpinner(true);
         try {
             validateForm();
-            await Courses.create(name, value);
+            await Courses.create(name);
             alert.variant = 'success';
             alert.message = 'Curso cadastrado com sucesso.';
         } catch (error) {
@@ -79,16 +64,6 @@ export default function NewCourseForm({ handleCloseModal, setAlert }) {
                     placeholder="Violão" 
                     onChange={(e) => handleNameChange(e.target.value)}
                     value={ name }
-                    required
-                />
-            </Form.Group>
-            
-            <Form.Group as="section" className="mb-3" controlId="value">
-                <Form.Label>Valor</Form.Label>
-                <Form.Control 
-                    placeholder="100,50"
-                    onChange={(e) => handleValueChange(e.target.value)}
-                    value={ value }
                     required
                 />
             </Form.Group>

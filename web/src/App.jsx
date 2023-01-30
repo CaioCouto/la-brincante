@@ -4,7 +4,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 
-import { Courses, EnrollmentDetails, Enrollments, Home, Students} from './Pages';
+import { Courses, EnrollmentDetails, Enrollments, Home, StudentDetails, Students} from './Pages';
 import { Navbar } from './Components';
 
 const router = createBrowserRouter([
@@ -15,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: 'alunos',
     element: <Students />
+  },
+  {
+    path: 'alunos/:id',
+    element: <StudentDetails />
   },
   {
     path: 'cursos',

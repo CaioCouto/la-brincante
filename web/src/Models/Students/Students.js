@@ -8,10 +8,23 @@ export default class Students {
     static getAll() {
         return api.get('/students');
     }
+    
+    static getById(id) {
+        return api.get(`/students/${id}`);
+    }
 
     static create(name) {
         return api.post(
             '/students/register',
+            {
+                name: name
+            }
+        );
+    }
+    
+    static update(id, name) {
+        return api.patch(
+            `/students/update/${id}`,
             {
                 name: name
             }

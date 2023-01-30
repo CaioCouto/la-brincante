@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Table } from 'react-bootstrap';
 import { BsX, BsPlus } from 'react-icons/bs';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { Students as StdModel } from '../../Models';
 import { closeAlertTimeout } from '../../utils';
+import { Students as StdModel } from '../../Models';
 import { NewStudentForm } from './StudentComponents';
 import { Alert, Button, Divider, Modal, Spinner } from '../../Components';
 
 export default function Students() {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [ showSpinner, setShowSpinner ] = useState(false);
     const [ showModal, setShowModal ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
@@ -51,6 +54,18 @@ export default function Students() {
         }
     }
 
+    function checkDeletedEnrollent() {
+        const deleted = location.state;
+        if (deleted) {
+            setAlert({
+                show: true,
+                variant: 'success',
+                message: 'Registro de aluno deletado com sucesso!'
+            });
+            closeAlertTimeout(setAlert, 5000);
+        }
+    }
+
     function filterStudents() {
         setStudentsFound([]);
         for(const std of students) {
@@ -64,7 +79,10 @@ export default function Students() {
         }
     }
 
-    useEffect(() => { getAllStudents() }, [ showModal ]);
+    useEffect(() => { 
+        checkDeletedEnrollent()
+        getAllStudents() 
+    }, [ showModal ]);
     useEffect(() => { filterStudents() }, [ studentName ]);
 
     return (
@@ -111,14 +129,14 @@ export default function Students() {
                 <p>Não há alunos cadastrados.</p> :
                 <StudentsTable
                     data={ !studentName ? students : studentsFound }
-                    deleteStudent={ deleteStudent }
+                    navigate={ navigate }
                 />
             }
         </>
     );
 }
 
-function StudentsTable({ data, deleteStudent }) {
+function StudentsTable({ data, navigate }) {
     return (
         data.length === 0 ?
         null:
@@ -138,10 +156,9 @@ function StudentsTable({ data, deleteStudent }) {
                             <td className='text-capitalize text-center align-middle'>{ student.name }</td>
                             <td className='d-flex flex-column flex-md-row justify-content-center align-items-center gap-2'>
                                 <Button
-                                    variant='danger'
-                                    label="Deletar"
-                                    Icon={ <BsX size={ 23 }/> }
-                                    onClickFn={ () => deleteStudent(student.id)  }
+                                    variant='info'
+                                    label="Detalhes"
+                                    onClickFn={ () => navigate(`${student.id}`)  }
                                 />
                             </td>
                         </tr>

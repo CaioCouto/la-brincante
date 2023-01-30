@@ -1,0 +1,7 @@
+.disabled {
+    color: #807979 !important; 
+}
+
+.student--card:hover {
+    cursor: pointer;
+}

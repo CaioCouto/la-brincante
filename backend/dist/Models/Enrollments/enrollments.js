@@ -10,7 +10,7 @@ class Enrollments {
     constructor(data) {
         this.studentId = data.studentId;
         this.courseId = data.courseId;
-        this.classDays = data.classDays.join(',');
+        this.classDays = data.classDays;
         this.classTime = data.classTime;
         this.billingDay = data.billingDay;
         this.discount = data.discount;

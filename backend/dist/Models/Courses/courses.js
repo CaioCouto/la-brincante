@@ -8,13 +8,11 @@ const { courses } = prisma_1.default;
 class Courses {
     constructor(data) {
         this.name = data.name.toLowerCase();
-        this.value = parseFloat(data.value);
     }
     register() {
         return courses.create({
             data: {
                 name: this.name,
-                value: this.value,
             }
         });
     }
@@ -25,7 +23,6 @@ class Courses {
             },
             data: {
                 name: this.name,
-                value: this.value,
             }
         });
     }

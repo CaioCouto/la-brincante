@@ -46,6 +46,8 @@ class StudentsController {
                     students = yield Models_1.Students.listUnique(parseInt(id));
                 else
                     students = yield Models_1.Students.list();
+                if (!students)
+                    return res.status(404).json(students);
                 return res.json(students);
             }
             catch (error) {

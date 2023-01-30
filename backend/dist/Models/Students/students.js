@@ -38,6 +38,8 @@ class Students {
                         classDays: true,
                         classTime: true,
                         course: true,
+                        isOnline: true,
+                        duration: true
                     }
                 }
             }

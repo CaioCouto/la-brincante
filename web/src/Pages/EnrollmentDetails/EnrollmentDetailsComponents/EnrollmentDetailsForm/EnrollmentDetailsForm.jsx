@@ -15,7 +15,9 @@ import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
 import { hoursToMinutes, minutesToHours, classDaysCheckBoxes, getCheckedDays, closeAlertTimeout, validateForm, weekdays } from '../../../../utils';
 
 function setInitialClassDays(dataClassDays) {
-    const classDaysArray = dataClassDays.split(',').map(day => parseInt(day));
+    const classDaysArray = dataClassDays.split(',').map(day => parseInt(day)-1);
+    console.log(classDaysArray);
+    console.log(classDaysCheckBoxes);
     return classDaysCheckBoxes.map((day, index) => {
         for(const classDay of classDaysArray) {
             if (index === classDay) {

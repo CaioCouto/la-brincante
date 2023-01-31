@@ -58,7 +58,7 @@ export default class Students {
                 enrollments: true
             },
             orderBy: {
-                id: 'asc'
+                name: 'asc'
             }
         });
     }

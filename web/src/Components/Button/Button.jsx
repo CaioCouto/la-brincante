@@ -2,7 +2,7 @@ import { Button as BsButton } from 'react-bootstrap';
 
 import styles from './button.module.css';
 
-export default function Button({ label, variant='info', Icon, onClickFn }) {
+export default function Button({ label, variant='info', type='', Icon, onClickFn }) {
     const classNames = {
         'success': styles['successBtn'],
         'danger': styles['dangerBtn'],
@@ -12,6 +12,7 @@ export default function Button({ label, variant='info', Icon, onClickFn }) {
         <BsButton 
             className={ `d-flex align-items-center gap-2 ${classNames[variant] || ''}`}
             onClick={ onClickFn }
+            type={ type }
         >
             { Icon }
             <p className='m-0'>{ label }</p>

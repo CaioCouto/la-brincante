@@ -60,7 +60,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const minutesStrIntoHoursArray = (timeStr) => timeStr.split(',').map(time => minutesToHours(parseInt(time)));
     const navigate = useNavigate();
     const [ showSpinner, setShowSpinner ] = useState(false);
-    const [ formAlert, setFormAlert ] = useState({ show: false });
+    const [ alert, setAlert ] = useState({ show: false });
     const [ classTime, setClassTime ] = useState(minutesStrIntoHoursArray(data.classTime));
     const [ classDuration, setClassDuration ] = useState(minutesStrIntoHoursArray(data.duration));
     const [ classDays, setClassDays ] = useState(setInitialClassDays(data.classDays));
@@ -145,18 +145,23 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
         const alert = { show: true };
         setShowSpinner(true);
         try {
-            await Enrollments.delete(data.id);
-            navigate('/matriculas', { replace: true, state: { deleted: true } });            
+            if(!showSpinner) {
+                await Enrollments.delete(data.id);
+                navigate('/matriculas', { replace: true, state: { deleted: true } });
+            }
         } catch (error) {
-            alert.variant = error.response.status === 404 ? 'warning' : 'danger';
-            alert.message = error.response.status === 404 ? 'Matrícula não existe.' : 'Um erro ocorreu.';
+            if (error.response) {
+                alert.variant = error.response.status === 404 ? 'warning' : 'danger';
+                alert.message = error.response.status === 404 ? 'Matrícula não existe.' : 'Um erro ocorreu.';
+            }
+            setAlert(alert);
         }
         finally {
             setShowSpinner(false);
         }
     }
 
-    async function submit () {
+    async function submit() {
         /**
          * Handle the form data submition.
          * Showing alerts in cases of successes
@@ -198,21 +203,20 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 setUpdate(false);
             }            
         } catch (error) {
-            console.log(error);
             alert.variant = 'danger';
             if(error.response){ alert.message = 'Um erro ocorreu durante a operação.'; }
             else { alert.message = error.message; }
         }
         finally {
-            setFormAlert(alert);
+            setAlert(alert);
             setShowSpinner(false);
-            closeAlertTimeout(setFormAlert, 5000);
+            closeAlertTimeout(setAlert, 5000);
         }
     }
 
     return (
         <Form>
-            { !formAlert ? null : <Alert alert={ formAlert } setAlert={ setFormAlert } /> }
+            { !alert ? null : <Alert alert={ alert } setAlert={ setAlert } /> }
 
             <Form.Group as="section"  className='row mb-3'>
                 <div className='col-12 col-md-6 mb-3'>

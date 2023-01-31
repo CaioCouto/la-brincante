@@ -5,6 +5,7 @@ import minutesToHours from "./minutesToHours";
 import getCheckedDays from "./getCheckedDays";
 import closeAlertTimeout from "./closeAlertTimeout";
 import validateForm from "./validateForm";
+import capitalize from "./capitalize";
 
 export {
     weekdays,
@@ -14,4 +15,5 @@ export {
     getCheckedDays,
     closeAlertTimeout,
     validateForm,
+    capitalize
 };

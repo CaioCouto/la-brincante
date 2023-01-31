@@ -4,7 +4,7 @@ import { BsCheck, BsX } from 'react-icons/bs';
   
 import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
 import { Enrollments, Courses, Students } from '../../../../Models';
-import { classDaysCheckBoxes, getCheckedDays, hoursToMinutes, validateForm } from '../../../../utils';
+import { capitalize, classDaysCheckBoxes, getCheckedDays, hoursToMinutes, validateForm } from '../../../../utils';
 
 function FormSelect({ defaultOptionText, data, onChangeFn }) {
     return (
@@ -12,7 +12,7 @@ function FormSelect({ defaultOptionText, data, onChangeFn }) {
             <option value="-1">{ defaultOptionText }</option>
             {
                 data.map(datum => (
-                    <option key={ datum.id } value={ datum.id }>{ datum.name }</option>
+                    <option key={ datum.id } value={ datum.id }>{ capitalize(datum.name) }</option>
                 ))
             }
         </Form.Select>

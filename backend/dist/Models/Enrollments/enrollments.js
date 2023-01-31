@@ -55,7 +55,7 @@ class Enrollments {
                 course: true
             },
             orderBy: {
-                id: 'asc'
+                studentId: 'asc'
             }
         });
     }

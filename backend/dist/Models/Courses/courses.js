@@ -29,7 +29,7 @@ class Courses {
     static list() {
         return courses.findMany({
             orderBy: {
-                id: 'asc'
+                name: 'asc'
             }
         });
     }

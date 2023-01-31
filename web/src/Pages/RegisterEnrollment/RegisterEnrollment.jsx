@@ -112,13 +112,12 @@ export default function NewEnrollmentForm() {
         setClassDays(tmp);
     }
 
-    async function submit(event) {
+    async function submit() {
         /**
          * Handle the form data submition.
          * Showing alerts in cases of successes
          * and (potential) failures.
          */
-        event.preventDefault();
         const checkedClassDays = getCheckedDays(classDays);
         const classTimesInMinutes = classTimes.map(time => hoursToMinutes(time.split(':')));
         const classDurationsInMinutes = classDuration.map(time => hoursToMinutes(time.split(':')));
@@ -305,8 +304,8 @@ export default function NewEnrollmentForm() {
                     <Button
                         variant='success'
                         label='Salvar'
-                        type='submit'
                         Icon={ <BsCheck size={ 23 }/> }
+                        onClickFn={ () => submit()}
                     />
                     <Button 
                         variant='danger'

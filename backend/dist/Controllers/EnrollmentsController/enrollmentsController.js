@@ -31,11 +31,13 @@ class EnrollmentsController {
     }
     static list(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { id } = req.query;
+            let { id, classDay } = req.query;
             let enrollments;
             try {
                 if (id)
                     enrollments = yield Models_1.Enrollments.listById(id.toString());
+                else if (classDay)
+                    enrollments = yield Models_1.Enrollments.listByClassDay(classDay.toString());
                 else
                     enrollments = yield Models_1.Enrollments.list();
                 return res.json(enrollments);

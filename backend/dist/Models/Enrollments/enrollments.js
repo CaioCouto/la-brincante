@@ -71,6 +71,19 @@ class Enrollments {
             rejectOnNotFound: true
         });
     }
+    static listByClassDay(classDay) {
+        return enrollments.findMany({
+            where: {
+                classDays: {
+                    contains: classDay
+                }
+            },
+            include: {
+                students: true,
+                course: true
+            }
+        });
+    }
     listByStudentIdAndCourseId() {
         return enrollments.findMany({
             where: {

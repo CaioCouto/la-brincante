@@ -12,7 +12,7 @@ export default function NewStudentForm({ handleCloseModal, setAlert }) {
     const [ formAlert, setFormAlert ] = useState({ show: false });
 
     function handleNameChange(inputName) {
-        const name = inputName.replace(/([^a-zA-z\s])/g, '').replace(/\s{2,}/g, ' ');
+        const name = inputName.replace(/([\d!@#$%¨&*(){}\[\]<>,.:;/?\\|+=*-+'"])/g, '').replace(/\s{2,}/g, ' ');
         setName(name);
     }
 

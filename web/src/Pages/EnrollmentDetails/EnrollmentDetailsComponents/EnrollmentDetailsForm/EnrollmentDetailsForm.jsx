@@ -16,8 +16,6 @@ import { hoursToMinutes, minutesToHours, classDaysCheckBoxes, getCheckedDays, cl
 
 function setInitialClassDays(dataClassDays) {
     const classDaysArray = dataClassDays.split(',').map(day => parseInt(day)-1);
-    console.log(classDaysArray);
-    console.log(classDaysCheckBoxes);
     return classDaysCheckBoxes.map((day, index) => {
         for(const classDay of classDaysArray) {
             if (index === classDay) {
@@ -293,11 +291,11 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                         defaultOptionText="Escolha o ambiente"
                         data={[
                             {
-                                id: 1,
+                                id: 0,
                                 name: 'Presencial',
                             },
                             {
-                                id: 0,
+                                id: 1,
                                 name: 'Online',
                             },
                         ]}

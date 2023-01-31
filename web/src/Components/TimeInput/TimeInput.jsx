@@ -24,7 +24,6 @@ export default function TimeInput({ label, className, value, onChangeFn, disable
                 value={ value }
                 onChange={ onChangeFn }
                 disabled={ disabled }
-                required
             />
         </div>
     )

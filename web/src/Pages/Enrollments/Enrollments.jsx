@@ -1,29 +1,27 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { BsPlus } from 'react-icons/bs';
 import { Form, Table as BsTable } from 'react-bootstrap';
 
 import { weekdays, minutesToHours } from '../../utils';
-import { Alert, Button, Divider, Modal } from '../../Components';
-import { NewEnrollmentForm } from './EnrollmentsComponents';
+import { Alert, Button, Divider } from '../../Components';
 import { Enrollments as EnrollmentsModel} from '../../Models';
 
 export default function Enrollments() {
     const location = useLocation();
-    const [ showModal, setShowModal ] = useState(false);
+    const navigate = useNavigate();
     const [ alert, setAlert ] = useState({ show: false });
     const [ enrollments, setEnrollments ] = useState([]);
     const [ studentName, setStudentName ] = useState('');
     const [ enrollmentsFound, setEnrollmentsFound ] = useState([]);
-
-    function checkDeletedEnrollent() {
-        const deleted = location.state;
-        if (deleted) {
-            setAlert({
-                show: true,
-                variant: 'success',
-                message: 'Matrícula deletada com sucesso'
-            });
+    
+    function checkLocationState() {
+        if(location.state) {
+            const { deleted, created } = location.state;
+            let alert = { show: true, variant: 'success' };
+            if (deleted) { alert.message = 'Matrícula deletada com sucesso!'; }
+            else if (created) { alert.message = 'Matrícula cadastrada com sucesso!'; }
+            setAlert(alert);
         }
     }
 
@@ -47,8 +45,8 @@ export default function Enrollments() {
 
     useEffect(() => { 
         getAllEnrollments();
-        checkDeletedEnrollent(); 
-    }, [ showModal ]);
+        checkLocationState();
+    }, []);
     useEffect(() => { filterEnrollments() }, [ studentName ]);
 
     return (
@@ -65,14 +63,7 @@ export default function Enrollments() {
                     label='Nova Matrícula'
                     variant='info'
                     Icon={ <BsPlus size={ 23 }/> }
-                    onClickFn={ () => { setShowModal(true) } }
-                />
-                <Modal
-                    title='Cadastro de Matrícula'
-                    show={ showModal }
-                    setShow={ setShowModal }
-                    setAlert={ setAlert }
-                    BodyComponent={ NewEnrollmentForm }
+                    onClickFn={ () => navigate('/matriculas/registro') }
                 />
             </section>
 

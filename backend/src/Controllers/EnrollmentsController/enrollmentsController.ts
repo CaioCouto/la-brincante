@@ -19,10 +19,12 @@ export default class EnrollmentsController {
     }
     
     static async list(req: Request, res: Response, next: NextFunction) {
-        let { id } = req.query;
+        let { id, classDay } = req.query;
         let enrollments;
+
         try {
             if (id) enrollments = await Enrollments.listById(id.toString());
+            else if (classDay) enrollments = await Enrollments.listByClassDay(classDay.toString());
             else enrollments = await Enrollments.list();
             return res.json(enrollments); 
         } catch (error: any) {

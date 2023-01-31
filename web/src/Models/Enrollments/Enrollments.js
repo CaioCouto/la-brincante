@@ -9,8 +9,8 @@ export default class Enrollments {
         return api.get('/enrollments');
     }
     
-    static getByClassDays(classDays) {
-        return api.get(`/enrollments?classDays=${classDays}`);
+    static getByClassDay(classDay) {
+        return api.get(`/enrollments?classDay=${classDay}`);
     }
     
     static getOne(id) {

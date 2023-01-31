@@ -92,6 +92,20 @@ export default class Enrollments {
         });
     }
     
+    static listByClassDay(classDay: string) {
+        return enrollments.findMany({
+            where: {
+                classDays: {
+                    contains: classDay
+                }
+            },
+            include: {
+                students: true,
+                course: true
+            }
+        });
+    }
+    
     listByStudentIdAndCourseId() {
         return enrollments.findMany({
             where: {

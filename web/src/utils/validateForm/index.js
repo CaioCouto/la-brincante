@@ -75,7 +75,7 @@ function validateDiscount(discount) {
      * (from 0 to 100). Anything different
      * will be invalidated.  
      */
-    if(discount < 0 || discount > 100) throw new FormInputError('Digite um valor de desconto válido.');
+    if(!discount || discount < '0' || discount > '100') throw new FormInputError('Digite um valor de desconto válido.');
 }
 
 function validateBillingDay(billingDay) {

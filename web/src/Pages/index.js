@@ -4,6 +4,7 @@ import StudentDetails from "./StudentDetails";
 import Courses from "./Courses";
 import Enrollments from "./Enrollments";
 import EnrollmentDetails from "./EnrollmentDetails";
+import RegisterEnrollment from "./RegisterEnrollment";
 
 export {
     Home,
@@ -11,5 +12,6 @@ export {
     Courses,
     Enrollments,
     EnrollmentDetails,
-    StudentDetails
+    StudentDetails,
+    RegisterEnrollment
 };

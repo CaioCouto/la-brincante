@@ -66,7 +66,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const [ classDays, setClassDays ] = useState(setInitialClassDays(data.classDays));
     const [ isOnline, setIsOnline ] = useState(Number(data.isOnline));
     const [ billingDay, setBillingDay ] = useState(data.billingDay);
-    const [ discount, setDiscount ] = useState(data.discount);
+    const [ discount, setDiscount ] = useState(data.discount.toString());
 
     function handleClassDayCheck(e) {
         /**
@@ -108,7 +108,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
          * tamanho.
          */
         const newIndex = classTime.length;
-        // setNumberOfClassTimeAndDurationInputs(previous => previous+1);
         handleClassTimeChange('', newIndex);
         handleClassDurationChange('', newIndex);
     }
@@ -122,7 +121,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
          * Ambos os arrays sempre possuirão o mesmo
          * tamanho.
          */
-        // setNumberOfClassTimeAndDurationInputs(previous => previous-1);
         handleClassTimeChange('', '', true);
         handleClassDurationChange('', '', true);
     }
@@ -193,7 +191,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                         classDays: checkedClassDays.join(','),
                         classTime: classTimesInMinutes.join(','),
                         billingDay: billingDay,
-                        discount: discount,
+                        discount: parseInt(discount),
                         isOnline: isOnline,
                         duration: classDurationsInMinutes.join(',')
                     }
@@ -338,8 +336,8 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                                 type="number" 
                                 min="0"
                                 max="100"
-                                onChange={(e) => { setDiscount(parseInt(e.target.value)) }}
-                                value={ discount.toString() }
+                                onChange={(e) => { setDiscount(e.target.value) }}
+                                value={ discount }
                                 required
                                 disabled={ !update }
                             />

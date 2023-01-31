@@ -241,11 +241,11 @@ export default function NewEnrollmentForm({ handleCloseModal, setAlert }) {
                             defaultOptionText="Escolha o ambiente"
                             data={[
                                 {
-                                    id: 1,
+                                    id: 0,
                                     name: 'Presencial',
                                 },
                                 {
-                                    id: 0,
+                                    id: 1,
                                     name: 'Online',
                                 },
                             ]}

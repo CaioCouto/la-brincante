@@ -10,8 +10,9 @@ import { closeAlertTimeout, minutesToHours, weekdays } from '../../utils';
 
 function calculateTotalMonthyValue(enrollments) {
     if (enrollments.length === 0) return 0;
+    const oneDayLongClass = enrollments.length === 1 && parseInt(enrollments[0].duration) > 60;
     const moreThanOneDayOfClass = enrollments.length === 2 || enrollments[0].classDays.split(',').length === 2;
-    if (moreThanOneDayOfClass) { return import.meta.env.VITE_BASE_MONTHLY_FULL_VALUE; }
+    if (moreThanOneDayOfClass || oneDayLongClass) return import.meta.env.VITE_BASE_MONTHLY_FULL_VALUE;
     return import.meta.env.VITE_BASE_MONTHLY_DISCOUNT_VALUE;
 }
 
@@ -23,13 +24,16 @@ function displayPeriods(enrollment, index) {
 
 export default function StudentDetails() {
     const navigate = useNavigate();
-    const location = useLocation();
     const { id } = useParams();
     const [ student, setStudent ] = useState({});
     const [ studentName, setStudentName ] = useState('');
     const [ update, setUpdate ] = useState(false);
-    const [ loading, setLoading ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
+
+    function handleNameChange(inputName) {
+        const name = inputName.replace(/([\d!@#$%¨&*(){}\[\]<>,.:;/?\\|+=*-+'"])/g, '').replace(/\s{2,}/g, ' ');
+        setStudentName(name);
+    }
 
     async function getStudent() {
         let alert = { show: true, variant: 'danger' };
@@ -110,7 +114,7 @@ export default function StudentDetails() {
                         <Form.Label>Nome</Form.Label>
                         <Form.Control 
                             className={`text-capitalize ${update ? null : styles['disabled']}`}
-                            onChange={(e) => setStudentName(e.target.value)}
+                            onChange={(e) => handleNameChange(e.target.value)}
                             value={ studentName }
                             disabled={ !update }
                         />

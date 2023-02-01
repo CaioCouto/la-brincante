@@ -5,8 +5,6 @@ interface IEnrollments {
     courseId: number
     classDays: string
     classTime: string
-    billingDay: string
-    discount: number
     isOnline: number
     duration: string
 };
@@ -18,8 +16,6 @@ export default class Enrollments {
     courseId: number
     classDays: string
     classTime: string
-    billingDay: string
-    discount: number
     isOnline: boolean
     duration: string
 
@@ -28,8 +24,6 @@ export default class Enrollments {
         this.courseId = data.courseId;
         this.classDays = data.classDays;
         this.classTime = data.classTime;
-        this.billingDay = data.billingDay;
-        this.discount = data.discount;
         this.isOnline = Boolean(data.isOnline);
         this.duration = data.duration;
     }
@@ -41,8 +35,6 @@ export default class Enrollments {
                 courseId: this.courseId,
                 classDays: this.classDays,
                 classTime: this.classTime,
-                billingDay: this.billingDay,
-                discount: this.discount,
                 isOnline: this.isOnline,
                 duration: this.duration,
             } 
@@ -59,8 +51,6 @@ export default class Enrollments {
                 courseId: this.courseId,
                 classDays: this.classDays,
                 classTime: this.classTime,
-                billingDay: this.billingDay,
-                discount: this.discount,
                 isOnline: this.isOnline,
                 duration: this.duration,
             }

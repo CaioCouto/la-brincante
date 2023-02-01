@@ -2,21 +2,29 @@ import prisma from "../prisma";
 
 interface Student {
     name: string
+    billingDay: string
+    discount: number
 }
 
 const { students } = prisma;
 
 export default class Students {
     name: string
+    billingDay: string
+    discount: number
 
     constructor(data: Student) {
         this.name = data.name;
+        this.billingDay = data.billingDay;
+        this.discount = data.discount;
     }
 
     public register() {
         return students.create({
             data: {
                 name: this.name,
+                billingDay: this.billingDay,
+                discount: this.discount
             }
         });
     }
@@ -27,7 +35,9 @@ export default class Students {
                 id: id,
             },
             data: {
-                name: this.name
+                name: this.name,
+                billingDay: this.billingDay,
+                discount: this.discount
             }
         })
     }

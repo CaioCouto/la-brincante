@@ -6,6 +6,7 @@ import Table from "./Table";
 import Spinner from "./Spinner";
 import Divider from "./Divider";
 import TimeInput from "./TimeInput";
+import ConfirmDeleteModal from "./ConfirmDeleteModal/ConfirmDeleteModal";
 
 export {
     Alert,
@@ -15,5 +16,6 @@ export {
     Navbar,
     Spinner,
     Divider,
-    TimeInput
+    TimeInput,
+    ConfirmDeleteModal
 };

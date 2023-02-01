@@ -21,8 +21,8 @@ function FormSelect({ defaultOptionText, data, onChangeFn }) {
 }
 
 const { 
-    validateStudent,
-    validateCourse,
+    validateStudentId,
+    validateCourseId,
     validateClassDays,
     validateClassTimes,
     validateClassDuration,
@@ -132,8 +132,8 @@ export default function NewEnrollmentForm() {
         setShowSpinner(true);
 
         try {
-            validateStudent(studentId),
-            validateCourse(courseId),
+            validateStudentId(studentId),
+            validateCourseId(courseId),
             validateClassDays(checkedClassDays),
             validateClassTimes(classTimesInMinutes),
             validateClassDuration(classDurationsInMinutes),

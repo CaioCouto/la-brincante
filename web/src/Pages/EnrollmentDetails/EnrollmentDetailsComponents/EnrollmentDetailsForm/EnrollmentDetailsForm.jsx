@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './EnrollmentDetailsForm.module.css';
 import { Enrollments } from '../../../../Models';
-import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
+import { Alert, Button, ConfirmDeleteModal, Spinner, TimeInput } from '../../../../Components';
 import { hoursToMinutes,
     minutesToHours,
     classDaysCheckBoxes,
@@ -64,6 +64,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const minutesStrIntoHoursArray = (timeStr) => timeStr.split(',').map(time => minutesToHours(parseInt(time)));
     const navigate = useNavigate();
     const [ showSpinner, setShowSpinner ] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
     const [ classTime, setClassTime ] = useState(minutesStrIntoHoursArray(data.classTime));
     const [ classDuration, setClassDuration ] = useState(minutesStrIntoHoursArray(data.duration));
@@ -145,6 +146,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
         try {
             if(!showSpinner) {
                 await Enrollments.delete(data.id);
+                setShowModal(false);
                 navigate('/matriculas', { replace: true, state: { deleted: true } });
             }
         } catch (error) {
@@ -209,6 +211,14 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
 
     return (
         <Form>
+            <ConfirmDeleteModal
+                show={ showModal }
+                setShow={ setShowModal }
+                showSpinner={ showSpinner }
+                id={ data.id }
+                deleteFn={ deleteEnrollment }
+            />
+
             { !alert ? null : <Alert alert={ alert } setAlert={ setAlert } /> }
 
             <Form.Group as="section"  className='row mb-3'>
@@ -324,7 +334,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
             </Form.Group>
 
             <Form.Group as="section" className='d-flex align-items-center justify-content-end gap-2'>
-                <Spinner show={ showSpinner } />
+                <Spinner show={ showSpinner && !showModal } />
                 <Button
                     variant="success"
                     label={!update ? 'Editar' : 'Salvar'}
@@ -335,7 +345,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                     variant="danger"
                     label={!update ? 'Excluir' : 'Cancelar'}
                     Icon={ !update ? null : <BsX size={ 23 }/> }
-                    onClickFn={ () => update ? cancelUpdate() : deleteEnrollment() }
+                    onClickFn={ () => update ? cancelUpdate() : setShowModal(true) }
                 />
             </Form.Group>
         </Form>

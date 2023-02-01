@@ -5,7 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import styles from './StudentDetails.module.css';
 import { Students} from '../../Models';
-import { Alert, Button, Spinner } from '../../Components';
+import { Alert, Button, ConfirmDeleteModal, Spinner } from '../../Components';
 import { closeAlertTimeout, minutesToHours, weekdays } from '../../utils';
 
 function getNextBillingDate(billingDay) {
@@ -60,6 +60,8 @@ export default function StudentDetails() {
     const [ studentBillingDay, setStudentBillingDay ] = useState('');
     const [ studentDiscount, setStudentDiscount ] = useState(0);
     const [ update, setUpdate ] = useState(false);
+    const [ showModal, setShowModal ] = useState(false);
+    const [ showSpinner, setShowSpinner ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
 
     function handleNameChange(inputName) {
@@ -90,10 +92,9 @@ export default function StudentDetails() {
         }
     }
 
-    console.log(student)
-
     async function updateStudent() {
         const alert = { show: true };
+        setShowSpinner(true);
         try {
             await Students.update(
                 student.id,
@@ -106,6 +107,7 @@ export default function StudentDetails() {
             alert.variant = 'success';
             alert.message = 'As informações do aluno atualizado com sucesso.';
             setUpdate(false);
+            setShowSpinner(false);
             getStudent();
         } catch (error) {
             alert.variant = 'danger';
@@ -118,9 +120,12 @@ export default function StudentDetails() {
     
     async function deleteStudent() {
         const alert = { show: true };
+        setShowSpinner(true);
         try {
             await Students.delete(student.id);
             navigate('/alunos', { replace: true, state: { deleted: true } });
+            setShowModal(false);
+            setShowSpinner(false);
         } catch (error) {
             alert.variant = 'danger';
             alert.message = 'Um erro ocorreu ao excluir o aluno.';
@@ -143,6 +148,14 @@ export default function StudentDetails() {
             <Alert
                 alert={ alert }
                 setAlert={ setAlert }
+            />
+
+            <ConfirmDeleteModal
+                show={ showModal }
+                setShow={ setShowModal }
+                showSpinner={ showSpinner }
+                id={ id }
+                deleteFn={ deleteStudent }
             />
 
         {
@@ -211,6 +224,7 @@ export default function StudentDetails() {
                         </InputGroup>
                     </Form.Group>
                     <Form.Group as="section" className='d-flex align-items-center justify-content-end gap-2'>
+                        <Spinner show={ showSpinner && !showModal }/>
                         <Button
                             label={ !update ? 'Editar' : 'Salvar' }
                             variant="success"
@@ -221,7 +235,7 @@ export default function StudentDetails() {
                             label={ !update ? 'Excluir' : 'Cancelar' }
                             variant="danger"
                             Icon={ !update ? null : <BsX size={ 23 }/> }
-                            onClickFn={ () => !update ? deleteStudent() : cancelUpdate() }
+                            onClickFn={ () => !update ? setShowModal(true) : cancelUpdate() }
                         />
                     </Form.Group>
                 </Form>

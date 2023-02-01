@@ -25,8 +25,6 @@ export default class Enrollments {
                 courseId: body.courseId,
                 classDays: body.classDays,
                 classTime: body.classTime,
-                billingDay: body.billingDay,
-                discount: body.discount,
                 isOnline: body.isOnline,
                 duration: body.duration
             }
@@ -41,8 +39,6 @@ export default class Enrollments {
                 courseId: body.courseId,
                 classDays: body.classDays,
                 classTime: body.classTime,
-                billingDay: body.billingDay,
-                discount: body.discount,
                 isOnline: body.isOnline,
                 duration: body.duration
             }

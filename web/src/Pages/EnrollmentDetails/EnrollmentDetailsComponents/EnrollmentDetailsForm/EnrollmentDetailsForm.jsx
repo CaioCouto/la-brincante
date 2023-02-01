@@ -12,7 +12,14 @@ import { useNavigate } from 'react-router-dom';
 import styles from './EnrollmentDetailsForm.module.css';
 import { Enrollments } from '../../../../Models';
 import { Alert, Button, Spinner, TimeInput } from '../../../../Components';
-import { hoursToMinutes, minutesToHours, classDaysCheckBoxes, getCheckedDays, closeAlertTimeout, validateForm, weekdays } from '../../../../utils';
+import { hoursToMinutes,
+    minutesToHours,
+    classDaysCheckBoxes,
+    getCheckedDays,
+    closeAlertTimeout,
+    validateForm,
+    weekdays 
+} from '../../../../utils';
 
 function setInitialClassDays(dataClassDays) {
     const classDaysArray = dataClassDays.split(',').map(day => parseInt(day)-1);
@@ -25,18 +32,6 @@ function setInitialClassDays(dataClassDays) {
         }
         return day;
     });
-}
-
-function getNextBillingDate(billingDay) {
-    /**
-     * Calculates next Billing Date. 
-     */
-    const formatStr = (x) => x < 10 ? '0'+x : x;
-    const today = new Date();
-    if(today.getDate() > parseInt(billingDay)) today.setMonth(today.getMonth()+1);
-    
-    today.setDate(billingDay);
-    return `${formatStr(today.getDate())}/${formatStr(today.getMonth()+1)}/${today.getFullYear()}`;
 }
 
 function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
@@ -56,6 +51,15 @@ function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
     )
 }
 
+const { 
+    validateStudent,
+    validateCourse,
+    validateClassDays,
+    validateClassTimes,
+    validateClassDuration,
+    validateEnviroment
+} = validateForm;
+
 export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const minutesStrIntoHoursArray = (timeStr) => timeStr.split(',').map(time => minutesToHours(parseInt(time)));
     const navigate = useNavigate();
@@ -65,7 +69,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const [ classDuration, setClassDuration ] = useState(minutesStrIntoHoursArray(data.duration));
     const [ classDays, setClassDays ] = useState(setInitialClassDays(data.classDays));
     const [ isOnline, setIsOnline ] = useState(Number(data.isOnline));
-    const [ billingDay, setBillingDay ] = useState(data.billingDay);
 
     function handleClassDayCheck(e) {
         /**
@@ -133,8 +136,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
         setClassDuration(minutesStrIntoHoursArray(data.duration));
         setClassDays(setInitialClassDays(data.classDays));
         setIsOnline(Number(data.isOnline));
-        setBillingDay(data.billingDay);
-        setDiscount(data.discount);
         setUpdate(false);
     }
 
@@ -171,14 +172,13 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
         setShowSpinner(true);
 
         try {
-            validateForm(({
-                studentId: data.studentId,
-                courseId: data.courseId,
-                classDays: checkedClassDays,
-                classTimes: classTimesInMinutes,
-                isOnline: isOnline,
-                duration: classDurationsInMinutes
-            }));
+            validateEnviroment(isOnline);
+            validateCourse(data.courseId);
+            validateStudent(data.studentId);
+            validateClassDays(checkedClassDays);
+            validateClassTimes(classTimesInMinutes);
+            validateClassDuration(classDurationsInMinutes);
+
             if(!showSpinner) {
                 await Enrollments.update(
                     data.id,

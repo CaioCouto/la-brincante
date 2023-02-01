@@ -1,19 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Table} from 'react-bootstrap';
 import { BsX, BsPlus } from 'react-icons/bs';
-import { Alert, Button, Divider, Modal, Spinner } from '../../Components';
 
 import { Courses as CoursesModel} from '../../Models';
 import { NewCourseForm } from './CoursesComponents';
 import { closeAlertTimeout } from '../../utils';
+import { Alert, Button, ConfirmDeleteModal, Divider, Modal } from '../../Components';
 
 export default function Courses() {
     const [ showSpinner, setSpinner ] = useState(false);
-    const [ showModal, setShowModal ] = useState(false);
+    const [ showModal, setShowModal ] = useState({ register: false, confirmation: false });
+    const [ idToBeDeleted, setidToBeDeleted ] = useState(0);
     const [ alert, setAlert ] = useState({ show: false });
     const [ courses, setCourses ] = useState([]);
     const [ CourseName, setCourseName ] = useState('');
     const [ coursesFound, setCoursesFound ] = useState([]);
+
+    function filterCourses() {
+        setCoursesFound([]);
+        for(const course of courses) {
+            const nameExists = course.name.toLowerCase().search(CourseName.toLowerCase()) !== -1;
+            if(nameExists) {
+                setCoursesFound(previous => ([
+                    ...previous,
+                    course
+                ]));
+            }
+        }
+    }
+
+    function handleDelete(id) {
+        setidToBeDeleted(id);
+        setShowModal(previous => ({
+            ...previous,
+            confirmation: true
+        }));
+    }
 
     async function getAllCourses() {
         const alert = {};
@@ -38,6 +60,10 @@ export default function Courses() {
             await CoursesModel.delete(id);
             alert.variant = 'success';
             alert.message = 'Curso deletado com sucesso.';
+            setShowModal(previous => ({
+                ...previous,
+                confirmation: false
+            }));
         } catch (error) {
             alert.variant = error.response.status === 404 ? 'warning' : 'danger';
             alert.message = error.response.status === 404 ? 'Curso não existe.' : 'Um Erro ocorreu durante a operação.';
@@ -46,19 +72,6 @@ export default function Courses() {
             setAlert(alert);
             setSpinner(false);
             closeAlertTimeout(setAlert, 5000);
-        }
-    }
-
-    function filterCourses() {
-        setCoursesFound([]);
-        for(const course of courses) {
-            const nameExists = course.name.toLowerCase().search(CourseName.toLowerCase()) !== -1;
-            if(nameExists) {
-                setCoursesFound(previous => ([
-                    ...previous,
-                    course
-                ]));
-            }
         }
     }
 
@@ -79,7 +92,7 @@ export default function Courses() {
                     label='Novo Curso'
                     variant="info"
                     Icon={ <BsPlus size={ 23 }/> }
-                    onClickFn={ () => { setShowModal(true) } }
+                    onClickFn={ () => { setShowModal(previous => ({...previous, register: true })) }}
                 />
                 <Modal
                     title='Cadastrar Curso'
@@ -88,7 +101,13 @@ export default function Courses() {
                     setAlert={ setAlert }
                     BodyComponent={ NewCourseForm }
                 />
-                <Spinner show={ showSpinner } />
+                <ConfirmDeleteModal
+                    show={ showModal }
+                    setShow={ setShowModal }
+                    id={ idToBeDeleted }
+                    deleteFn={ deleteCourse }
+                    showSpinner={ showSpinner }
+                />
             </section>
 
                   
@@ -110,14 +129,14 @@ export default function Courses() {
                 <h3>Não há cursos cadastrados.</h3> :
                 <CoursesTable 
                     data={ !CourseName ? courses : coursesFound }
-                    deleteCourse={ deleteCourse }
+                    handleDelete={ handleDelete }
                 />
             }
         </>
     );
 }
 
-function CoursesTable({ data, deleteCourse }) {
+function CoursesTable({ data, handleDelete }) {
     return (
         data.length === 0 ?
         null :
@@ -140,7 +159,7 @@ function CoursesTable({ data, deleteCourse }) {
                                     variant="danger"
                                     label="Deletar"
                                     Icon={ <BsX size={ 23 }/> }
-                                    onClickFn={ () => deleteCourse(datum.id)  }
+                                    onClickFn={ () => handleDelete(datum.id)  }
                                 />
                             </td>
                         </tr>

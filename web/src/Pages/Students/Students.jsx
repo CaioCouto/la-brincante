@@ -35,25 +35,6 @@ export default function Students() {
         }
     }
 
-    async function deleteStudent(id) {
-        const alert = { show: true };
-        setShowSpinner(true);
-        try {
-            await StdModel.delete(id);
-            alert.variant = 'success';
-            alert.message = 'Aluno deletado com sucesso.';
-            getAllStudents();
-        } catch (error) {
-            alert.variant = error.response.status === 404 ? 'warning' : 'danger';
-            alert.message = error.response.status === 404 ? 'Estudante não existe.' : 'Um Erro ocorreu durante a operação.';
-        }
-        finally {
-            setAlert(alert);
-            setShowSpinner(false);
-            closeAlertTimeout(setAlert, 5000);
-        }
-    }
-
     function checkDeletedEnrollent() {
         const deleted = location.state;
         if (deleted) {

@@ -24,6 +24,7 @@ function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
 }
 
 const {
+    validateStudentName,
     validateBillingDay,
     validateDiscount
 } = validateForm;
@@ -40,15 +41,14 @@ export default function NewStudentForm({ handleCloseModal, setAlert }) {
         setName(name);
     }
 
-    function validateForm() {
-        if(name.length <= 2) throw new Errors.FormInputError("Digite um nome válido");
-    }
-
     async function submit () {
         let alert = { show: true };
         setShowSpinner(true);
         try {
-            validateForm();
+            validateStudentName(name);
+            validateBillingDay(billingDay);
+            validateDiscount(discount);
+
             await Students.create({
                 name: name,
                 billingDay: billingDay,

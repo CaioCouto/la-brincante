@@ -2,14 +2,28 @@ import { Errors } from "../../Models";
 
 const { FormInputError } = Errors;
 
-function validateStudent(student) {
+function validateStudentName(name) {
+    /**
+     * Student's *name* must have at least 3 letters;
+     */
+    if(name.length < 3) throw new FormInputError('Digite um nome válido para continuar.');
+}
+
+function validateStudentId(student) {
     /**
      * *studentId* should be less or equal 0;
      */
     if(student <= 0) throw new FormInputError('Escolha um aluno válido para continuar.');
 }
 
-function validateCourse(course) {
+function validateCourseName(name) {
+    /**
+     * Course's *name* must have at least 3 letters;
+     */
+    if(name.length < 3) throw new FormInputError('Escolha um nome válido para continuar.');
+}
+
+function validateCourseId(course) {
     /**
      * *courseId* should be less or equal 0;
      */
@@ -87,24 +101,11 @@ function validateBillingDay(billingDay) {
     if(!billingDay || parseInt(billingDay) <= 0) throw new FormInputError('Selecione um dia válido para cobrança.');
 }
 
-function validateForm(data) {
-    /**
-     * Validates all fields in the form. If any of the 
-     * following is not valid, a self-defined exception is thown.
-     */
-    validateStudent(data.studentId)
-    validateCourse(data.courseId)
-    validateClassTimes(data.classTimes)
-    validateClassDuration(data.duration)
-    validateEnviroment(data.isOnline)
-    validateClassDays(data.classDays)
-    validateDiscount(data.discount)
-    validateBillingDay(data.billingDay)
-}
-
 export default {
-    validateStudent,
-    validateCourse,
+    validateStudentName,
+    validateStudentId,
+    validateCourseName,
+    validateCourseId,
     validateClassTimes,
     validateClassDuration,
     validateEnviroment,

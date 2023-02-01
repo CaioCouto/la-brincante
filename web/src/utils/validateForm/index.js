@@ -87,7 +87,7 @@ function validateBillingDay(billingDay) {
     if(!billingDay || parseInt(billingDay) <= 0) throw new FormInputError('Selecione um dia válido para cobrança.');
 }
 
-export default function validateForm(data) {
+function validateForm(data) {
     /**
      * Validates all fields in the form. If any of the 
      * following is not valid, a self-defined exception is thown.
@@ -101,3 +101,14 @@ export default function validateForm(data) {
     validateDiscount(data.discount)
     validateBillingDay(data.billingDay)
 }
+
+export default {
+    validateStudent,
+    validateCourse,
+    validateClassTimes,
+    validateClassDuration,
+    validateEnviroment,
+    validateClassDays,
+    validateDiscount,
+    validateBillingDay,
+};

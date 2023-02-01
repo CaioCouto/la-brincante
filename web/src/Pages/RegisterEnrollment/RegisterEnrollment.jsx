@@ -20,6 +20,15 @@ function FormSelect({ defaultOptionText, data, onChangeFn }) {
     )
 }
 
+const { 
+    validateStudent,
+    validateCourse,
+    validateClassDays,
+    validateClassTimes,
+    validateClassDuration,
+    validateEnviroment
+} = validateForm;
+
 export default function NewEnrollmentForm() {
     const navigate = useNavigate();
     const [ showSpinner, setShowSpinner ] = useState(false);
@@ -32,8 +41,6 @@ export default function NewEnrollmentForm() {
     const [ classDuration, setClassDuration ] = useState(['']);
     const [ classDays, setClassDays ] = useState(classDaysCheckBoxes);
     const [ isOnline, setIsOnline ] = useState(-1);
-    const [ billingDay, setBillingDay ] = useState('');
-    const [ discount, setDiscount ] = useState('0');
 
     async function loadAllStudents() {
         /**
@@ -125,16 +132,13 @@ export default function NewEnrollmentForm() {
         setShowSpinner(true);
 
         try {
-            validateForm({
-                studentId: studentId,
-                courseId: courseId,
-                classDays: checkedClassDays,
-                classTimes: classTimesInMinutes,
-                billingDay: billingDay,
-                discount: discount,
-                isOnline: isOnline,
-                duration: classDurationsInMinutes
-            });
+            validateStudent(studentId),
+            validateCourse(courseId),
+            validateClassDays(checkedClassDays),
+            validateClassTimes(classTimesInMinutes),
+            validateClassDuration(classDurationsInMinutes),
+            validateEnviroment(isOnline)
+            
             if(!showSpinner) {
                 await Enrollments.create({
                     studentId: studentId,
@@ -237,64 +241,40 @@ export default function NewEnrollmentForm() {
                 </Form.Group>
 
                 <Form.Group as="section"  className='row mb-3'>
-                    <article className="col-12 col-md-6">
-                        <div className="mb-3">
-                            <Form.Label>Ambiente</Form.Label>
-                            <FormSelect
-                                defaultOptionText="Escolha o ambiente"
-                                data={[
-                                    {
-                                        id: 0,
-                                        name: 'Presencial',
-                                    },
-                                    {
-                                        id: 1,
-                                        name: 'Online',
-                                    },
-                                ]}
-                                onChangeFn={ (e) => setIsOnline(parseInt(e.target.value))}
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <Form.Label>Dias das aulas</Form.Label>
-                                <div className="d-flex flex-wrap">
+                    <article className="col-12">
+                        <Form.Label>Ambiente</Form.Label>
+                        <FormSelect
+                            defaultOptionText="Escolha o ambiente"
+                            data={[
                                 {
-                                    classDays.map((day, index) => (
-                                        <Form.Check
-                                            key={ index }
-                                            className='text-capitalize col-6'
-                                            type='checkbox'
-                                            checked={ day.checked }
-                                            id={ index+1 }
-                                            label={ day.label }
-                                            onChange={ (e) => handleClassDayCheck(e) }
-                                        />
-                                    ))
-                                }
-                            </div>
-                        </div>
+                                    id: 0,
+                                    name: 'Presencial',
+                                },
+                                {
+                                    id: 1,
+                                    name: 'Online',
+                                },
+                            ]}
+                            onChangeFn={ (e) => setIsOnline(parseInt(e.target.value))}
+                        />
                     </article>
 
-                    <article className="col-12 col-md-6 d-flex flex-column justify-content-between">
-                        <div as="div" className="mb-3">
-                            <Form.Label>Desconto (%)</Form.Label>
-                            <Form.Control
-                                type="number" 
-                                min="0"
-                                max="100"
-                                onChange={(e) => setDiscount(e.target.value)}
-                                value={ discount }
-                            />
-                        </div>
-
-                        <div as="section" className="mb-3">
-                            <Form.Label>Dia da fatura</Form.Label>
-                            <FormSelect
-                                data={Array.from(Array(31), (_, i) => ({ id: i+1, name: i+1 }))}
-                                defaultOptionText="Escolha o melhor dia para a cobrança"
-                                onChangeFn={(e) => setBillingDay(e.target.value)}
-                            />
+                    <article className="col-12 col-md-6">
+                        <Form.Label>Dias das aulas</Form.Label>
+                            <div className="d-flex flex-wrap">
+                            {
+                                classDays.map((day, index) => (
+                                    <Form.Check
+                                        key={ index }
+                                        className='text-capitalize col-6'
+                                        type='checkbox'
+                                        checked={ day.checked }
+                                        id={ index+1 }
+                                        label={ day.label }
+                                        onChange={ (e) => handleClassDayCheck(e) }
+                                    />
+                                ))
+                            }
                         </div>
                     </article>
                 </Form.Group>

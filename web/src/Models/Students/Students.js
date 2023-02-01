@@ -13,12 +13,10 @@ export default class Students {
         return api.get(`/students/${id}`);
     }
 
-    static create(name) {
+    static create(data) {
         return api.post(
             '/students/register',
-            {
-                name: name
-            }
+            data
         );
     }
     

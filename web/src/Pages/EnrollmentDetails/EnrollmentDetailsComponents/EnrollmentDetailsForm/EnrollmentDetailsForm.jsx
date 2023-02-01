@@ -52,8 +52,8 @@ function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
 }
 
 const { 
-    validateStudent,
-    validateCourse,
+    validateStudentId,
+    validateCourseId,
     validateClassDays,
     validateClassTimes,
     validateClassDuration,
@@ -173,8 +173,8 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
 
         try {
             validateEnviroment(isOnline);
-            validateCourse(data.courseId);
-            validateStudent(data.studentId);
+            validateCourseId(data.courseId);
+            validateStudentId(data.studentId);
             validateClassDays(checkedClassDays);
             validateClassTimes(classTimesInMinutes);
             validateClassDuration(classDurationsInMinutes);

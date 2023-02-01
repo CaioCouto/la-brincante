@@ -12,8 +12,6 @@ class Enrollments {
         this.courseId = data.courseId;
         this.classDays = data.classDays;
         this.classTime = data.classTime;
-        this.billingDay = data.billingDay;
-        this.discount = data.discount;
         this.isOnline = Boolean(data.isOnline);
         this.duration = data.duration;
     }
@@ -24,8 +22,6 @@ class Enrollments {
                 courseId: this.courseId,
                 classDays: this.classDays,
                 classTime: this.classTime,
-                billingDay: this.billingDay,
-                discount: this.discount,
                 isOnline: this.isOnline,
                 duration: this.duration,
             }
@@ -41,8 +37,6 @@ class Enrollments {
                 courseId: this.courseId,
                 classDays: this.classDays,
                 classTime: this.classTime,
-                billingDay: this.billingDay,
-                discount: this.discount,
                 isOnline: this.isOnline,
                 duration: this.duration,
             }

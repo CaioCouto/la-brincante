@@ -8,11 +8,15 @@ const { students } = prisma_1.default;
 class Students {
     constructor(data) {
         this.name = data.name;
+        this.billingDay = data.billingDay;
+        this.discount = data.discount;
     }
     register() {
         return students.create({
             data: {
                 name: this.name,
+                billingDay: this.billingDay,
+                discount: this.discount
             }
         });
     }
@@ -22,7 +26,9 @@ class Students {
                 id: id,
             },
             data: {
-                name: this.name
+                name: this.name,
+                billingDay: this.billingDay,
+                discount: this.discount
             }
         });
     }

@@ -16,4 +16,5 @@ app.use('/assets', express_1.default.static(returnStaticDir()));
 app.use(Views_1.studentsRoutes);
 app.use(Views_1.coursesRoutes);
 app.use(Views_1.enrollmentsRoutes);
+app.use(Views_1.templateRoutes);
 exports.default = app;

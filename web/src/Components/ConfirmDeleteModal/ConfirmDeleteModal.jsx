@@ -3,10 +3,14 @@ import Button from '../Button';
 import Spinner from '../Spinner';
 
 export default function ConfirmDeleteModal({ show, setShow, showSpinner, id, deleteFn, }) {
-    const handleClose = () => setShow(previous => ({ ...previous, confirmation: false }));
+    const showIsBoolean = typeof show === 'boolean';
+    const handleClose = () => {
+        if (showIsBoolean) return setShow(false);
+        setShow(previous => ({ ...previous, confirmation: false }));
+    }
 
     return (
-        <BsModal show={ show.confirmation } onHide={ handleClose }>
+        <BsModal show={ showIsBoolean ? show : show.confirmation } onHide={ handleClose }>
             <BsModal.Header>
                 <BsModal.Title>Você tem certeza disso?</BsModal.Title>
             </BsModal.Header>

@@ -132,12 +132,12 @@ export default function NewEnrollmentForm() {
         setShowSpinner(true);
 
         try {
-            validateStudentId(studentId),
-            validateCourseId(courseId),
-            validateClassDays(checkedClassDays),
-            validateClassTimes(classTimesInMinutes),
-            validateClassDuration(classDurationsInMinutes),
-            validateEnviroment(isOnline)
+            validateStudentId(studentId);
+            validateCourseId(courseId);
+            validateClassTimes(classTimesInMinutes);
+            validateClassDuration(classDurationsInMinutes);
+            validateEnviroment(isOnline);
+            validateClassDays(checkedClassDays);
             
             if(!showSpinner) {
                 await Enrollments.create({
@@ -145,8 +145,6 @@ export default function NewEnrollmentForm() {
                     courseId: courseId,
                     classDays: checkedClassDays.join(','),
                     classTime: classTimesInMinutes.join(','),
-                    billingDay: billingDay,
-                    discount: parseInt(discount),
                     isOnline: isOnline,
                     duration: classDurationsInMinutes.join(',')
                 });

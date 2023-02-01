@@ -14,6 +14,8 @@ datasource db {
 model Students {
 	id			Int @id @default(autoincrement())
 	name		String
+	billingDay  String @default("5")
+	discount	Int @default(0)
 	
 	enrollments Enrollments[]
 }
@@ -31,8 +33,6 @@ model Enrollments {
 	studentId	Int
 	classDays	String
 	classTime	String
-	billingDay  String
-	discount	Int
 	isOnline	Boolean @default(false)
 	duration	String
 	

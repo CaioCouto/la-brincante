@@ -4,7 +4,9 @@ import { BsCheck, BsX } from 'react-icons/bs';
 
 import { Courses, Errors } from '../../../../Models';
 import { Alert, Button, Spinner } from '../../../../Components';
-import { closeAlertTimeout } from '../../../../utils';
+import { closeAlertTimeout, validateForm } from '../../../../utils';
+
+const { validateCourseName } = validateForm;
 
 export default function NewCourseForm({ handleCloseModal, setAlert }) {
     const [ name, setName ] = useState('');
@@ -16,15 +18,11 @@ export default function NewCourseForm({ handleCloseModal, setAlert }) {
         setName(name);
     }
 
-    function validateForm() {
-        if(name.length <= 3) throw new Errors.FormInputError("Digite um nome válido.");
-    }
-
     async function submit () {
         let alert = { show: true };
         setSpinner(true);
         try {
-            validateForm();
+            validateCourseName(name);
             await Courses.create(name);
             alert.variant = 'success';
             alert.message = 'Curso cadastrado com sucesso.';

@@ -38,7 +38,7 @@ export default function EnrollmentDetails() {
                 Object.keys(enrollment).length === 0 ?
                 <Spinner show={ true }/> :
                 <>
-                    <h1>RA { `${enrollment.id}`.padStart(7, '0') }</h1>
+                    <h1>Matrícula nº { `${enrollment.id}` }</h1>
                     <EnrollmentDetailsForm
                         data={ enrollment }
                         update={ update }

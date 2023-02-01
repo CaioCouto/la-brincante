@@ -66,7 +66,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const [ classDays, setClassDays ] = useState(setInitialClassDays(data.classDays));
     const [ isOnline, setIsOnline ] = useState(Number(data.isOnline));
     const [ billingDay, setBillingDay ] = useState(data.billingDay);
-    const [ discount, setDiscount ] = useState(data.discount.toString());
 
     function handleClassDayCheck(e) {
         /**
@@ -177,8 +176,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 courseId: data.courseId,
                 classDays: checkedClassDays,
                 classTimes: classTimesInMinutes,
-                billingDay: billingDay,
-                discount: discount,
                 isOnline: isOnline,
                 duration: classDurationsInMinutes
             }));
@@ -190,8 +187,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                         courseId: data.courseId,
                         classDays: checkedClassDays.join(','),
                         classTime: classTimesInMinutes.join(','),
-                        billingDay: billingDay,
-                        discount: parseInt(discount),
                         isOnline: isOnline,
                         duration: classDurationsInMinutes.join(',')
                     }
@@ -324,49 +319,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                                 />
                             ))
                         }
-                    </div>
-                </div>
-
-                <div className="col-12 col-md-6">
-                    <div className="d-flex flex-column gap-2">
-                        <div className="">
-                            <Form.Label>Desconto (%)</Form.Label>
-                            <Form.Control
-                                className={`${!update ? styles['disabled'] : null}`}
-                                type="number" 
-                                min="0"
-                                max="100"
-                                onChange={(e) => { setDiscount(e.target.value) }}
-                                value={ discount }
-                                required
-                                disabled={ !update }
-                            />
-                        </div>
-
-                        <div className="">
-                            {
-                                update ?
-                                <>
-                                    <Form.Label>Dia da fatura</Form.Label>
-                                    <FormSelect
-                                        disabled={ false }
-                                        value={ billingDay }
-                                        data={Array.from(Array(31), (_, i) => ({ id: i+1, name: i+1 }))}
-                                        defaultOptionText="Escolha o melhor dia para a cobrança"
-                                        onChangeFn={(e) => setBillingDay(e.target.value)}
-                                        />
-                                </>
-                                :
-                                <>
-                                    <Form.Label>Data da fatura</Form.Label>
-                                    <Form.Control
-                                        disabled
-                                        className={ styles['disabled'] }
-                                        value={ getNextBillingDate(billingDay) }
-                                    />
-                                </>
-                            }
-                        </div>
                     </div>
                 </div>
             </Form.Group>

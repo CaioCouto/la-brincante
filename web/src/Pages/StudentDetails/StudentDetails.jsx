@@ -8,12 +8,25 @@ import { Students} from '../../Models';
 import { Alert, Button, Spinner } from '../../Components';
 import { closeAlertTimeout, minutesToHours, weekdays } from '../../utils';
 
-function calculateTotalMonthyValue(enrollments) {
+function getNextBillingDate(billingDay) {
+    /**
+     * Calculates next Billing Date. 
+     */
+    const formatStr = (x) => x < 10 ? '0'+x : x;
+    const today = new Date();
+    if(today.getDate() > parseInt(billingDay)) today.setMonth(today.getMonth()+1);
+    
+    today.setDate(billingDay);
+    return `${formatStr(today.getDate())}/${formatStr(today.getMonth()+1)}/${today.getFullYear()}`;
+}
+
+function calculateTotalMonthyValue(enrollments, studentDiscount) {
     if (enrollments.length === 0) return 0;
+    const finalValue = (x) => x * (1 - studentDiscount/100);
     const oneDayLongClass = enrollments.length === 1 && parseInt(enrollments[0].duration) > 60;
     const moreThanOneDayOfClass = enrollments.length === 2 || enrollments[0].classDays.split(',').length === 2;
-    if (moreThanOneDayOfClass || oneDayLongClass) return import.meta.env.VITE_BASE_MONTHLY_FULL_VALUE;
-    return import.meta.env.VITE_BASE_MONTHLY_DISCOUNT_VALUE;
+    if (moreThanOneDayOfClass || oneDayLongClass) return finalValue(import.meta.env.VITE_BASE_MONTHLY_FULL_VALUE);
+    return finalValue(import.meta.env.VITE_BASE_MONTHLY_DISCOUNT_VALUE);
 }
 
 function displayPeriods(enrollment, index) {
@@ -22,11 +35,30 @@ function displayPeriods(enrollment, index) {
     return minutesToHours(todayClassTime)
 }
 
+function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
+    return (
+        <Form.Select
+            className={`${disabled ? styles['disabled'] : null}`} 
+            onChange={ onChangeFn } 
+            value={ value } 
+            disabled={ disabled }>
+            <option value="-1">{ defaultOptionText }</option>
+            {
+                data.map(datum => (
+                    <option key={ datum.id } value={ datum.id }>{ datum.name }</option>
+                ))
+            }
+        </Form.Select>
+    )
+}
+
 export default function StudentDetails() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [ student, setStudent ] = useState({});
     const [ studentName, setStudentName ] = useState('');
+    const [ studentBillingDay, setStudentBillingDay ] = useState('');
+    const [ studentDiscount, setStudentDiscount ] = useState(0);
     const [ update, setUpdate ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
 
@@ -35,12 +67,19 @@ export default function StudentDetails() {
         setStudentName(name);
     }
 
+    function cancelUpdate() {
+        setStudentName(student.name);
+        setUpdate(false);
+    }
+
     async function getStudent() {
         let alert = { show: true, variant: 'danger' };
         try {
             const response = await Students.getById(id);
-            setStudentName(response.data.name)
             setStudent(response.data);
+            setStudentName(response.data.name)
+            setStudentDiscount(response.data.discount)
+            setStudentBillingDay(response.data.billingDay)
         } catch (error) {
             alert.message = error.response.status === 404 ? 'O aluno que você busca não existe. ' : 'Um erro ocorreu enquanto tentáva buscar as informações do aluno. ';
             alert.message += 'Você será redirecionado para a tela de Alunos.';
@@ -51,13 +90,23 @@ export default function StudentDetails() {
         }
     }
 
+    console.log(student)
+
     async function updateStudent() {
         const alert = { show: true };
         try {
-            await Students.update(student.id, studentName);
+            await Students.update(
+                student.id,
+                {
+                    name: studentName,
+                    billingDay: studentBillingDay,
+                    discount: parseInt(studentDiscount),
+                }
+            );
             alert.variant = 'success';
             alert.message = 'As informações do aluno atualizado com sucesso.';
-            setUpdate(false)
+            setUpdate(false);
+            getStudent();
         } catch (error) {
             alert.variant = 'danger';
             alert.message = 'Um erro ocorreu ao atualizar o aluno.';
@@ -78,11 +127,6 @@ export default function StudentDetails() {
             setAlert(alert);
             closeAlertTimeout(setAlert, 5000);
         }
-    }
-
-    function cancelUpdate() {
-        setStudentName(student.name);
-        setUpdate(false);
     }
 
     useEffect(() => { getStudent(); }, []);
@@ -110,7 +154,7 @@ export default function StudentDetails() {
                 </section>
                 
                 <Form className='row'>
-                    <Form.Group as="section" className='col-12 col-md-6 mb-3'>
+                    <Form.Group as="section" className='col-12 mb-3'>
                         <Form.Label>Nome</Form.Label>
                         <Form.Control 
                             className={`text-capitalize ${update ? null : styles['disabled']}`}
@@ -120,13 +164,48 @@ export default function StudentDetails() {
                         />
                     </Form.Group>
                     <Form.Group as="section" className='col-12 col-md-6 mb-3'>
+                        {
+                            update ?
+                            <>
+                                <Form.Label>Dia da fatura</Form.Label>
+                                <FormSelect
+                                    disabled={ false }
+                                    value={ studentBillingDay }
+                                    data={Array.from(Array(31), (_, i) => ({ id: i+1, name: i+1 }))}
+                                    defaultOptionText="Escolha o melhor dia para a cobrança"
+                                    onChangeFn={(e) => setStudentBillingDay(e.target.value)}
+                                />
+                            </>
+                            :
+                            <>
+                                <Form.Label>Data da fatura</Form.Label>
+                                <Form.Control
+                                    disabled
+                                    className={ styles['disabled'] }
+                                    value={ getNextBillingDate(student.billingDay) }
+                                />
+                            </>
+                        }
+                    </Form.Group>
+                    <Form.Group as="section" className='col-12 col-md-6 mb-3'>
+                        <Form.Label>Desconto</Form.Label>
+                        <InputGroup>
+                            <Form.Control 
+                                className={`text-capitalize ${ !update ? styles['disabled'] : null}`}
+                                value={ studentDiscount }
+                                onChange={ (e) => setStudentDiscount(e.target.value) }
+                                disabled = { !update }
+                                />
+                            <InputGroup.Text>%</InputGroup.Text>
+                        </InputGroup>
+                    </Form.Group>
+                    <Form.Group as="section" className='col-12 mb-3'>
                         <Form.Label>Total a pagar</Form.Label>
                         <InputGroup>
                             <InputGroup.Text>R$</InputGroup.Text>
                             <Form.Control 
                                 className={`text-capitalize ${styles['disabled']}`}
-                                onChange={(e) => console.log(e.target.value)}
-                                value={ calculateTotalMonthyValue(student.enrollments) }
+                                value={ calculateTotalMonthyValue(student.enrollments, student.discount) }
                                 disabled
                             />
                         </InputGroup>

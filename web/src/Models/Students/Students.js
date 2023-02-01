@@ -22,12 +22,10 @@ export default class Students {
         );
     }
     
-    static update(id, name) {
+    static update(id, data) {
         return api.patch(
             `/students/update/${id}`,
-            {
-                name: name
-            }
+            data
         );
     }
     

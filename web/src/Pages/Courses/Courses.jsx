@@ -143,7 +143,6 @@ function CoursesTable({ data, handleDelete }) {
         <Table striped bordered hover>
             <thead>
                 <tr>
-                    <th className='text-center'>Id</th>
                     <th className='text-center'>Curso</th>
                     <th></th>
                 </tr>
@@ -152,7 +151,6 @@ function CoursesTable({ data, handleDelete }) {
                 {
                     data.map(datum => (
                         <tr key={ datum.id }>
-                            <td className='text-capitalize text-center align-middle'>{ datum.id }</td>
                             <td className='text-capitalize text-center align-middle'>{ datum.name }</td>
                             <td className='d-flex flex-column flex-md-row justify-content-center align-items-center gap-2'>
                                 <Button

@@ -124,7 +124,6 @@ function StudentsTable({ data, navigate }) {
         <Table striped bordered hover>
             <thead>
                 <tr>
-                    <th className='text-center'>Id</th>
                     <th className='text-center'>Nome</th>
                     <th></th>
                 </tr>
@@ -133,7 +132,6 @@ function StudentsTable({ data, navigate }) {
                 {
                     data.map(student => (
                         <tr key={ student.id }>
-                            <td className='text-capitalize text-center align-middle'>{ student.id }</td>
                             <td className='text-capitalize text-center align-middle'>{ student.name }</td>
                             <td className='d-flex flex-column flex-md-row justify-content-center align-items-center gap-2'>
                                 <Button

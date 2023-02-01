@@ -101,7 +101,6 @@ function EnrollmentsTable({ data }) {
         <BsTable striped bordered>
             <thead>
                 <tr>
-                    <th className='d-none d-md-table-cell text-center align-middle'>Id</th>
                     <th className='text-center align-middle'>Aluno</th>
                     <th className='text-center align-middle'>Curso</th>
                     <th className='d-none d-md-table-cell text-center align-middle'>Dias da Semana</th>
@@ -113,7 +112,6 @@ function EnrollmentsTable({ data }) {
                 {
                     data.map(datum => (
                         <tr key={ datum.id }>
-                            <td className='d-none d-md-table-cell text-capitalize text-center align-middle'>{ datum.id }</td>
                             <td className='text-capitalize text-center align-middle'>{ datum.students.name }</td>
                             <td className='text-capitalize text-center align-middle'>{ datum.course.name }</td>
                             <td className='d-none d-md-table-cell text-capitalize text-center align-middle'>{ getDaysStr(datum.classDays) }</td>

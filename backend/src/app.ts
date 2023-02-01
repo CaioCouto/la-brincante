@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 
 import { getTemplatesDir } from './utils';
-import { studentsRoutes, coursesRoutes, enrollmentsRoutes } from './Views';
+import { studentsRoutes, coursesRoutes, enrollmentsRoutes, templateRoutes } from './Views';
 
 const returnStaticDir = () => path.join(getTemplatesDir(), 'assets');
 
@@ -14,5 +14,6 @@ app.use('/assets', express.static(returnStaticDir()));
 app.use(studentsRoutes);
 app.use(coursesRoutes);
 app.use(enrollmentsRoutes);
+app.use(templateRoutes);
 
 export default app;

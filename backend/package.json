@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx prisma generate && npx prisma migrate deploy && node dist/index.js",
-    "start": "node dist/index.js",
+    "build": "npx tsc & npx cpx src\\Templates\\** dist\\Templates && npx prisma generate && npx prisma migrate deploy && node dist/index.js",
+    "preview": "npx tsc & npx cpx src\\Templates\\** dist\\Templates && node dist/index.js",
     "dev": "tsnd --respawn --transpile-only src/index.ts",
-    "test": "jest",
-    "transpile": "cpx src\\Templates\\** dist\\Templates"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

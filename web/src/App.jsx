@@ -1,11 +1,16 @@
 import './App.css';
-import {
-  createBrowserRouter,
-  RouterProvider
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { Courses, EnrollmentDetails, Enrollments, Home, RegisterEnrollment, StudentDetails, Students} from './Pages';
 import { Navbar } from './Components';
+import { 
+  Home,
+  Courses,
+  Students,
+  StudentDetails,
+  Enrollments,
+  EnrollmentDetails,
+  RegisterEnrollment,
+} from './Pages';
 
 const router = createBrowserRouter([
   {

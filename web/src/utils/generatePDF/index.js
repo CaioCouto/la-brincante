@@ -9,10 +9,11 @@ export default function generatePDF(element) {
      * iniciado o download do arquivo.
      */
     var opt = {
-        margin: [0.3, 3],
+        margin: [0, 15],
         filename: 'LaBrincante_Horário.pdf',
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'cm', format: 'letter', orientation: 'portrait' }
+        html2canvas: { scale: 2, letterRendering: true },
+        jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
     return html2pdf().set(opt).from(element).save();
 }

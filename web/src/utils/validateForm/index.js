@@ -77,9 +77,9 @@ function validateClassDays(classDays) {
      * the index of each checkbox that was
      * checked in the form. To be validated
      * the *length* of this array must be
-     * bigger than 0 
+     * bigger than 0 and smaller than 3.
      */
-    if(classDays.length === 0) throw new FormInputError('Selecione ao menos um dia de aula.');
+    if(classDays.length === 0 || classDays.length >= 3) throw new FormInputError('Selecione até dois dias de aula.');
 }
 
 function validateDiscount(discount) {

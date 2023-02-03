@@ -6,6 +6,7 @@ import Table from "./Table";
 import Spinner from "./Spinner";
 import Divider from "./Divider";
 import TimeInput from "./TimeInput";
+import PDFTemplate from "./PDFTemplate/PDFTemplate";
 import ConfirmDeleteModal from "./ConfirmDeleteModal/ConfirmDeleteModal";
 
 export {
@@ -17,5 +18,6 @@ export {
     Spinner,
     Divider,
     TimeInput,
+    PDFTemplate,
     ConfirmDeleteModal
 };

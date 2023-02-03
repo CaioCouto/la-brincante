@@ -1,3 +1,22 @@
+.timeTable-title {
+    font-size: 24pt;
+}
+
+.timeTable-table {
+    table-layout: fixed !important;
+}
+
 .timeTable-text {
-    font-size: 1.2rem;
+    font-size: 12pt;
+}
+
+@media print {
+    .timeTable-title {
+        page-break-before: always;
+    }
+    
+    .timeTable-table,
+    .timeTable-text {
+        page-break-inside: avoid;
+    }
 }

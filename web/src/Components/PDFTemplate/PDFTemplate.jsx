@@ -1,24 +1,32 @@
 import styles from './PDFTemplate.module.css';
 import { displayClassTimeSpan, weekdays } from '../../utils';
+import { Table } from 'react-bootstrap';
+import React from 'react';
 
 export default function PDFTemplate({ enrollments }) {
     return (
-        <section id="timeTable">
+        <section className='d-flex flex-column align-items-center'>
         {
-            enrollments.map(enrollment => (
+            enrollments.map((enrollment, i) => (
                 enrollment.classes.length === 0 ?
                 null :
-                <article key={ enrollment.day } className="mb-3 py-2">
-                    <h3 className='text-center text-capitalize'>{ weekdays[enrollment.day] }</h3>
-                    {
-                        enrollment.classes.map(c => (
-                            <div key={ c.id } className={`${ styles['timeTable-text'] } d-flex justify-content-between align-items-items p-2`}>
-                                <p className='m-0'>{ c.students.name } ({ c.isOnline ? 'Online' : 'Presencial' })</p>
-                                <p className='m-0'>{ displayClassTimeSpan(c, enrollment.day) }</p>
-                            </div>
-                        ))
-                    }
-                </article>
+                <React.Fragment key={ i }>
+                    <h3 className={ `text-capitalize ${ styles['timeTable-title'] }` }>{ weekdays[enrollment.day] }</h3>
+                    <Table className={ styles['timeTable-table'] }>
+                        <tbody>
+                        {
+                            enrollment.classes.map((c, j) => (
+                                <tr key={ j } className={`${ styles['timeTable-text'] }`}>
+                                    <td className='p-0 py-2 text-center text-capitalize'>{ c.students.name }</td>
+                                    <td className='p-0 py-2 text-center text-capitalize'>{ c.course.name }</td>
+                                    <td className='p-0 py-2 text-center text-capitalize'>{ displayClassTimeSpan(c, enrollment.day) }</td>
+                                    <td className='p-0 py-2 text-center text-capitalize'>{ c.isOnline ? 'Online' : 'Presencial' }</td>
+                                </tr>
+                            ))
+                        }
+                        </tbody>
+                    </Table>
+                </React.Fragment>
             ))
         }
         </section>

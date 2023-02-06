@@ -1,24 +1,11 @@
-import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BsArrowReturnLeft, BsCheck, BsX } from 'react-icons/bs';
   
-import { Alert, Button, Spinner, TimeInput } from '../../Components';
+import { Alert, Button, FormSelect, Spinner, TimeInput } from '../../Components';
 import { Enrollments, Courses, Students } from '../../Models';
-import { capitalize, classDaysCheckBoxes, getCheckedDays, hoursToMinutes, validateForm } from '../../utils';
-import { useNavigate } from 'react-router-dom';
-
-function FormSelect({ defaultOptionText, data, onChangeFn }) {
-    return (
-        <Form.Select onChange={ onChangeFn }>
-            <option value="-1">{ defaultOptionText }</option>
-            {
-                data.map(datum => (
-                    <option key={ datum.id } value={ datum.id }>{ capitalize(datum.name) }</option>
-                ))
-            }
-        </Form.Select>
-    )
-}
+import { classDaysCheckBoxes, getCheckedDays, hoursToMinutes, validateForm } from '../../utils';
 
 const { 
     validateStudentId,
@@ -127,7 +114,6 @@ export default function NewEnrollmentForm() {
          */
         const checkedClassDays = getCheckedDays(classDays);
         const classTimesInMinutes = classTimes.map(time => hoursToMinutes(time.split(':')));
-        const classDurationsInMinutes = classDuration.map(time => hoursToMinutes(time.split(':')));
         let alert = { show: true };
         setShowSpinner(true);
 
@@ -135,7 +121,7 @@ export default function NewEnrollmentForm() {
             validateStudentId(studentId);
             validateCourseId(courseId);
             validateClassTimes(classTimesInMinutes);
-            validateClassDuration(classDurationsInMinutes);
+            validateClassDuration(classDuration);
             validateEnviroment(isOnline);
             validateClassDays(checkedClassDays);
             
@@ -146,7 +132,7 @@ export default function NewEnrollmentForm() {
                     classDays: checkedClassDays.join(','),
                     classTime: classTimesInMinutes.join(','),
                     isOnline: isOnline,
-                    duration: classDurationsInMinutes.join(',')
+                    duration: classDuration.join(',')
                 });
                 navigate('/matriculas', { replace: true, state: { created: true } });
             }
@@ -184,9 +170,9 @@ export default function NewEnrollmentForm() {
                 { !alert ? null : <Alert alert={ alert } setAlert={ setAlert } /> }
 
                 <Form.Group as="section"  className='row mb-3'>
-                    <div className='col-12 col-md-6 mb-3'>
-                        <Form.Label>Aluno</Form.Label>
+                    <div className='col-12 col-md-6'>
                         <FormSelect
+                            label="Alunos"
                             defaultOptionText="Escolha um aluno"
                             data={ students }
                             onChangeFn={ (e) => setStudentId(parseInt(e.target.value)) }
@@ -194,8 +180,8 @@ export default function NewEnrollmentForm() {
                     </div>
                     
                     <div className='col-12 col-md-6'>
-                        <Form.Label>Curso</Form.Label>
                         <FormSelect
+                            label="Cursos"
                             defaultOptionText="Escolha um curso"
                             data={ courses }
                             onChangeFn={ (e) => setCourseId(parseInt(e.target.value)) }
@@ -206,22 +192,30 @@ export default function NewEnrollmentForm() {
                 <Form.Group as="section"  className='row mb-3'>
                     {
                         classTimes.map((n, index) => (        
-                            <div key={ index } className='d-flex flex-column flex-sm-row justify-content-between gap-1 mb-3'>
-                                <TimeInput
-                                    label={ `Horário${classTimes.length > 1 ? ' '+(index+1) : ''}` }
-                                    onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}
-                                    value={ classTimes[index] || '' }
-                                />
-                                <TimeInput
-                                    label={ `Duração${classTimes.length > 1 ? ' '+(index+1) : ''}` }
-                                    onChangeFn={(e) => handleClassDurationChange(e.target.value, index)}
-                                    value={ classDuration[index] || '' }
-                                />
+                            <div key={ index } className='col-12 mb-3'>
+                                <div className='row'>
+                                    <div className="col-12 col-md-6">
+                                        <TimeInput
+                                            label={ `Horário${classTimes.length > 1 ? ' '+(index+1) : ''}` }
+                                            onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}
+                                            value={ classTimes[index] || '' }
+                                        />
+                                    </div>
+
+                                    <div className='col-12 col-md-6'>
+                                        <FormSelect
+                                            label='Duração'
+                                            defaultOptionText="Escolha a duração da aula"
+                                            data={[{ id: 60, name: '01 hr' }, { id: 120, name: '02 hrs' } ]}
+                                            onChangeFn={ (e) => handleClassDurationChange(e.target.value, index) }
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         ))
                     }
 
-                    <div className='d-flex justify-content-between'>
+                    <div className='col-12 d-flex justify-content-end gap-2'>
                         <Button
                             label="Adicionar horário"
                             onClickFn={ () => addClasstimeAndDurationInputs() }
@@ -256,7 +250,9 @@ export default function NewEnrollmentForm() {
                             onChangeFn={ (e) => setIsOnline(parseInt(e.target.value))}
                         />
                     </article>
+                </Form.Group>
 
+                <Form.Group as="section"  className='row mb-3'>
                     <article className="col-12 col-md-6">
                         <Form.Label>Dias das aulas</Form.Label>
                             <div className="d-flex flex-wrap">

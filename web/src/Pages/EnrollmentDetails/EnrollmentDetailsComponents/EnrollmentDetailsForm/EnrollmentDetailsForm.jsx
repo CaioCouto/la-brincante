@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styles from './EnrollmentDetailsForm.module.css';
 import { Enrollments } from '../../../../Models';
-import { Alert, Button, ConfirmDeleteModal, Spinner, TimeInput } from '../../../../Components';
+import { Alert, Button, ConfirmDeleteModal, Spinner, TimeInput, FormSelect } from '../../../../Components';
 import { hoursToMinutes,
     minutesToHours,
     classDaysCheckBoxes,
@@ -34,23 +34,6 @@ function setInitialClassDays(dataClassDays) {
     });
 }
 
-function FormSelect({ defaultOptionText, data, onChangeFn, value, disabled }) {
-    return (
-        <Form.Select
-            className={`${disabled ? styles['disabled'] : null}`} 
-            onChange={ onChangeFn } 
-            value={ value } 
-            disabled={ disabled }>
-            <option value="-1">{ defaultOptionText }</option>
-            {
-                data.map(datum => (
-                    <option key={ datum.id } value={ datum.id }>{ datum.name }</option>
-                ))
-            }
-        </Form.Select>
-    )
-}
-
 const { 
     validateStudentId,
     validateCourseId,
@@ -67,7 +50,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
     const [ showModal, setShowModal ] = useState(false);
     const [ alert, setAlert ] = useState({ show: false });
     const [ classTime, setClassTime ] = useState(minutesStrIntoHoursArray(data.classTime));
-    const [ classDuration, setClassDuration ] = useState(minutesStrIntoHoursArray(data.duration));
+    const [ classDuration, setClassDuration ] = useState(data.duration.split(','));
     const [ classDays, setClassDays ] = useState(setInitialClassDays(data.classDays));
     const [ isOnline, setIsOnline ] = useState(Number(data.isOnline));
 
@@ -170,7 +153,6 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
         let alert = { show: true };
         const checkedClassDays = getCheckedDays(classDays);
         const classTimesInMinutes = classTime.map(time => hoursToMinutes(time.split(':')));
-        const classDurationsInMinutes = classDuration.map(time => hoursToMinutes(time.split(':')));
         setShowSpinner(true);
 
         try {
@@ -179,7 +161,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
             validateStudentId(data.studentId);
             validateClassDays(checkedClassDays);
             validateClassTimes(classTimesInMinutes);
-            validateClassDuration(classDurationsInMinutes);
+            validateClassDuration(classDuration);
 
             if(!showSpinner) {
                 await Enrollments.update(
@@ -190,7 +172,7 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                         classDays: checkedClassDays.join(','),
                         classTime: classTimesInMinutes.join(','),
                         isOnline: isOnline,
-                        duration: classDurationsInMinutes.join(',')
+                        duration: classDuration.join(',')
                     }
                 );
                 alert.variant = 'success';
@@ -248,21 +230,30 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                     Array(classTime.length).fill(0).map((n, index) => {
                         const str = `(${weekdays[parseInt(data.classDays.split(',')[index])]})`
                         return (
-                            <div key={ index } className='d-flex flex-column flex-sm-row justify-content-between gap-1 mb-3'>
-                                <TimeInput
-                                    label={ `Horário${classTime.length > 1 ? ' '+(str) : ''}` }
-                                    className={`${!update ? styles['disabled'] : null}`}
-                                    value={ classTime[index] || '' }
-                                    onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}
-                                    disabled={ !update }
-                                />
-                                <TimeInput
-                                    label={ `Duração${classTime.length > 1 ? ' '+(str) : ''}` }
-                                    className={`${!update ? styles['disabled'] : null}`}
-                                    value={ classDuration[index] || '' }
-                                    onChangeFn={(e) => handleClassDurationChange(e.target.value, index)}
-                                    disabled={ !update }
-                                />
+                            <div key={ index } className='col-12 mb-3'>
+                                <div className='row'>
+                                    <div className="col-12 col-md-6">
+                                        <TimeInput
+                                            label={ `Horário${classTime.length > 1 ? ' '+(str) : ''}` }
+                                            className={`${!update ? styles['disabled'] : null}`}
+                                            value={ classTime[index] || '' }
+                                            onChangeFn={(e) => handleClassTimeChange(e.target.value, index)}
+                                            disabled={ !update }
+                                        />
+                                    </div>
+
+                                    <div className='col-12 col-md-6'>
+                                        <FormSelect
+                                            label={ `Duração${classTime.length > 1 ? ' '+(str) : ''}` }
+                                            defaultOptionText="Escolha a duração da aula"
+                                            value={ classDuration[index] }
+                                            data={[{ id: 60, name: '01 hr' }, { id: 120, name: '02 hrs' }]}
+                                            onChangeFn={ (e) => handleClassDurationChange(e.target.value, index)}
+                                            className={`${!update ? styles['disabled'] : null}`}
+                                            disabled={ !update }
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         )
                     })
@@ -293,19 +284,11 @@ export default function NewEnrollmentForm({ data, update, setUpdate }) {
                 <div className="col-12">
                     <Form.Label>Ambiente</Form.Label>
                     <FormSelect
+                        className={`${!update ? styles['disabled'] : null}`}
                         disabled={ !update }
                         value={ isOnline }
                         defaultOptionText="Escolha o ambiente"
-                        data={[
-                            {
-                                id: 0,
-                                name: 'Presencial',
-                            },
-                            {
-                                id: 1,
-                                name: 'Online',
-                            },
-                        ]}
+                        data={[{ id: 0, name: 'Presencial' }, { id: 1, name: 'Online' }]}
                         onChangeFn={ (e) => setIsOnline(parseInt(e.target.value))}
                     />
                 </div>

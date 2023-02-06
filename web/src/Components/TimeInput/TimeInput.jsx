@@ -16,7 +16,7 @@ import { Form } from "react-bootstrap";
 
 export default function TimeInput({ label, className, value, onChangeFn, disabled }) {
     return (
-        <div className="col-12 col-sm-6">
+        <>
             <Form.Label>{ label }</Form.Label>
             <Form.Control 
                 type="time"
@@ -25,6 +25,6 @@ export default function TimeInput({ label, className, value, onChangeFn, disable
                 onChange={ onChangeFn }
                 disabled={ disabled }
             />
-        </div>
+        </>
     )
 }

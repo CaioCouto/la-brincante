@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc & npx cpx src\\Templates\\** dist\\Templates && npx prisma generate && npx prisma migrate deploy && node dist/index.js",
-    "preview": "npx tsc & npx cpx src\\Templates\\** dist\\Templates && node dist/index.js",
+    "build": "npx tsc && npx prisma generate && npx prisma migrate deploy && node dist/index.js",
+    "preview": "npx tsc && node dist/index.js",
     "dev": "tsnd --respawn --transpile-only src/index.ts",
     "test": "jest"
   },
@@ -22,7 +22,6 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.1",
     "axios": "^0.26.1",
-    "cpx": "^1.5.0",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
     "prisma": "^3.15.2",

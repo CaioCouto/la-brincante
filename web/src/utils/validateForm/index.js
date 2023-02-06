@@ -55,8 +55,8 @@ function validateClassDuration(classDurations) {
      *      - an integer bigger than 0;
      */
     classDurations.forEach(time => {
-        if(!time || time <= 0) 
-            throw new FormInputError('A aula não pode acabar instantaneamente. Digite uma duração válida.');
+        if(time === '-1') 
+            throw new FormInputError('Escolha uma duraçã de aula válida.');
     });
 }
 

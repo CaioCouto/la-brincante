@@ -8,6 +8,7 @@ import Divider from "./Divider";
 import TimeInput from "./TimeInput";
 import PDFTemplate from "./PDFTemplate/PDFTemplate";
 import ConfirmDeleteModal from "./ConfirmDeleteModal/ConfirmDeleteModal";
+import FormSelect from "./FormSelect/FormSelect";
 
 export {
     Alert,
@@ -18,6 +19,7 @@ export {
     Spinner,
     Divider,
     TimeInput,
+    FormSelect,
     PDFTemplate,
     ConfirmDeleteModal
 };

@@ -8,7 +8,7 @@ import path, { resolve } from 'path';
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: resolve(__dirname, '../', 'backend', 'src', 'Templates'),
+    outDir: resolve(__dirname, '../', 'backend', 'dist', 'Templates'),
     emptyOutDir: true
   },
   server: {
